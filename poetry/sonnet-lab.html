@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poetry Lab: Petrarchan Sonnet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,500&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f7f1e3;
+    --card: #fffdf8;
+    --tint: #fbf5e8;
+    --ink: #2a2238;
+    --muted: #625a70;
+    --rule: #e7dbc3;
+    --rule-strong: #d6c49f;
+    --terracotta: #b94c2a;
+    --terracotta-soft: #f8e4da;
+    --lapis: #2c5a8a;
+    --lapis-soft: #e9f0f8;
+    --gold: #e7b440;
+    --gold-soft: #fff1c9;
+    --olive: #4f7a31;
+    --success: #2a7d4b;
+    --rh-a: #b94c2a;
+    --rh-b: #3d7a2a;
+    --rh-c: #2c5a8a;
+    --rh-d: #7b4394;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: 'Nunito', 'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    margin: 0;
+    padding: 24px 20px 40px;
+    line-height: 1.65;
+    font-size: 17px;
+  }
+  .container { max-width: 880px; margin: 0 auto; }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; line-height: 1.2; font-weight: 700; }
+  h2 { font-size: 1.9em; margin: 0 0 10px; color: var(--ink); }
+  h3 { font-size: 1.22em; margin: 0 0 8px; color: var(--ink); }
+  p { margin: 0 0 12px; }
+  em { font-style: italic; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--card);
+    border: 1px solid var(--rule-strong);
+    border-radius: 24px;
+    padding: 44px 160px 34px;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    left: 10px; right: 10px; top: 10px; bottom: 10px;
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    pointer-events: none;
+  }
+  .eyebrow {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.78em;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin: 0 0 6px;
+  }
+  h1 { font-size: 3.1em; font-weight: 800; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .subtitle { color: var(--muted); margin: 0; font-size: 1.05em; }
+  .subtitle strong { color: var(--ink); }
+  .chips { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip {
+    font-weight: 800; font-size: 0.85em; padding: 5px 14px; border-radius: 999px;
+    background: var(--lapis-soft); color: var(--lapis); border: 1px solid #cddcec;
+  }
+  .vine-corner { position: absolute; top: -6px; width: 175px; height: auto; pointer-events: none; }
+  .vine-corner.left { left: -4px; }
+  .vine-corner.right { right: -4px; transform: scaleX(-1); }
+
+  /* ---------- Step tabs ---------- */
+  .tabs-wrap {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--paper);
+    padding: 8px 0 10px;
+    margin-bottom: 8px;
+  }
+  .tabs {
+    display: flex;
+    gap: 6px;
+    background: var(--card);
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    padding: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: 1 0 auto;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 44px;
+    padding: 6px 14px 6px 8px;
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 0.95em;
+    color: var(--muted);
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+    -webkit-appearance: none; appearance: none;
+  }
+  .tab-btn .n {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--tint); border: 1px solid var(--rule-strong);
+    font-size: 0.85em; color: var(--ink);
+  }
+  .tab-btn:hover:not(.active) { background: var(--tint); color: var(--ink); }
+  .tab-btn.active { background: var(--ink); color: #fff; }
+  .tab-btn.active .n { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+
+  /* ---------- Panels ---------- */
+  .tab-content {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    padding: 34px 36px;
+    border-radius: 24px;
+    box-shadow: 0 1px 0 var(--rule), 0 12px 30px rgba(42,34,56,0.06);
+    display: none;
+  }
+  .tab-content.active { display: block; }
+  .lead { font-size: 1.12em; color: var(--muted); margin-bottom: 18px; }
+
+  .card {
+    background: var(--tint);
+    border: 1px solid var(--rule);
+    padding: 22px 24px;
+    border-radius: 18px;
+    margin: 18px 0;
+  }
+  .card > h3:first-child, .card > .badge:first-child { margin-top: 0; }
+  .task {
+    background: var(--card);
+    border: 2px solid var(--terracotta);
+    border-radius: 18px;
+    padding: 22px 24px;
+    margin: 20px 0;
+  }
+  .task ul { margin: 6px 0 12px; padding-left: 22px; }
+  .task li { margin-bottom: 4px; }
+  .note {
+    background: var(--lapis-soft);
+    border: 1px solid #cfdeed;
+    padding: 16px 20px;
+    border-radius: 16px;
+    margin: 18px 0;
+    font-size: 0.98em;
+  }
+  .note ul { padding-left: 22px; }
+  .badge { display: inline-block; font-weight: 800; font-size: 0.78em; padding: 3px 12px; border-radius: 999px; margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .badge-free { background: #e6e9ec; color: #3d4a55; }
+  .badge-sonnet { background: var(--gold-soft); color: #6b4d00; border: 1px solid #f1d98a; }
+
+  /* ---------- Poems ---------- */
+  .poem {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    padding: 20px 26px;
+    border-radius: 14px;
+    margin: 12px 0 4px;
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 1.08em;
+    line-height: 1.75;
+  }
+  .sonnet {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    padding: 18px 18px 18px 8px;
+    margin: 14px 0;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.06em;
+  }
+  .part {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.74em;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+    margin: 4px 0 6px 46px;
+  }
+  .part::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+  .part.volta { color: var(--terracotta); margin-top: 16px; }
+  .part.volta::after { background: #efc4b3; }
+  .ln { display: -webkit-box; display: flex; align-items: baseline; gap: 10px; padding: 3px 0; }
+  .ln .num { width: 36px; flex: 0 0 36px; text-align: right; font-family: 'Nunito', sans-serif; font-size: 0.72em; font-weight: 700; color: #8a8195; }
+  .ln .txt { flex: 1; font-style: italic; line-height: 1.6; }
+  .ln .rl { flex: 0 0 26px; width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-family: 'Nunito', sans-serif; font-style: normal; font-weight: 800; font-size: 0.72em; color: #fff; }
+  .ln.l9 { background: var(--terracotta-soft); border-radius: 10px; }
+  .rw { font-weight: 700; font-style: italic; }
+  .a { color: var(--rh-a); } .b { color: var(--rh-b); } .c { color: var(--rh-c); } .d { color: var(--rh-d); }
+  .rl.a { background: var(--rh-a); color: #fff; } .rl.b { background: var(--rh-b); color: #fff; }
+  .rl.c { background: var(--rh-c); color: #fff; } .rl.d { background: var(--rh-d); color: #fff; }
+  .scheme { display: inline-flex; gap: 3px; vertical-align: middle; margin-left: 4px; }
+  .scheme span { width: 24px; height: 24px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8em; color: #fff; }
+  .scheme .a { background: var(--rh-a); } .scheme .b { background: var(--rh-b); } .scheme .c { background: var(--rh-c); } .scheme .d { background: var(--rh-d); }
+
+  .structure { display: grid; grid-template-columns: 8fr 6fr; gap: 12px; margin: 18px 0 22px; }
+  .structure .blk { border-radius: 16px; padding: 16px 18px; border: 1px solid var(--rule); background: var(--tint); }
+  .structure .blk.sestet { background: var(--terracotta-soft); border-color: #efc4b3; }
+  .structure .blk h3 { margin-bottom: 2px; }
+  .structure .blk p { margin: 0 0 8px; font-size: 0.95em; color: var(--muted); }
+
+  /* ---------- Meter ---------- */
+  .meter-demo { text-align: center; margin: 22px 0; padding: 22px 16px; background: var(--tint); border: 1px solid var(--rule); border-radius: 18px; }
+  .beats { text-align: center; font-size: 1.15em; font-weight: 800; letter-spacing: 0.03em; margin: 10px 0 18px; color: var(--muted); }
+  .beats b { color: var(--terracotta); }
+  .meter-line { font-family: 'Courier New', Courier, monospace; font-size: 1.15em; letter-spacing: 0.5px; line-height: 2.2; }
+  .stress { background: var(--gold-soft); border: 1px solid #f1d98a; padding: 2px 7px; border-radius: 6px; font-weight: bold; }
+  .unstress { color: var(--muted); }
+
+  /* ---------- Gloss ---------- */
+  .gloss { font: inherit; font-style: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; border-bottom: 2px dotted var(--lapis); -webkit-appearance: none; appearance: none; }
+  .gloss.seen { background: var(--gold-soft); border-radius: 4px; }
+  .gloss-box { background: var(--card); border: 2px solid var(--gold); border-radius: 14px; padding: 14px 18px; margin: 0 0 18px; }
+
+  /* ---------- Intro ---------- */
+  .intro-row { display: flex; align-items: center; gap: 24px; }
+  .intro-row > div { flex: 1; }
+  .lute { width: 130px; flex: 0 0 130px; height: auto; filter: drop-shadow(0 6px 8px rgba(90,58,30,0.22)); }
+  .lute-caption { background: var(--gold-soft); border: 1px solid #f1d98a; border-radius: 14px; padding: 12px 16px; font-size: 0.96em; margin: 0; }
+
+  /* ---------- Forms & buttons ---------- */
+  textarea, input {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 8px 0;
+    border: 1.5px solid var(--rule-strong);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1em;
+    background: #fff;
+    color: var(--ink);
+    -webkit-appearance: none; appearance: none;
+  }
+  textarea:focus, input:focus { outline: none; border-color: var(--lapis); box-shadow: 0 0 0 3px rgba(44,90,138,0.15); }
+  textarea { min-height: 110px; resize: vertical; }
+  label { display: block; margin-top: 14px; }
+  .line-count { font-size: 0.9em; color: var(--muted); }
+  .btn {
+    background: var(--terracotta);
+    color: #fff;
+    border: none;
+    min-height: 44px;
+    padding: 10px 24px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 1em;
+    margin: 8px 8px 6px 0;
+    box-shadow: 0 2px 0 #8e3519;
+    transition: transform 0.1s, background 0.15s;
+    -webkit-appearance: none; appearance: none;
+  }
+  .btn:hover { background: #a6421f; }
+  .btn:active { transform: translateY(2px); box-shadow: 0 0 0 #8e3519; }
+  .btn-export { background: var(--success); box-shadow: 0 2px 0 #1b5c35; }
+  .btn-export:hover { background: #236c40; }
+  .export-status { display: none; background: #dff2e6; color: #145a32; padding: 12px 16px; border-radius: 12px; margin-top: 12px; font-weight: 800; }
+
+  .mark-line { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0; }
+  .syl {
+    font-family: inherit; font-size: 1.05em; font-weight: 700; min-height: 44px; min-width: 44px; padding: 8px 12px; border-radius: 10px;
+    border: 1.5px solid var(--rule-strong); background: #fff; color: var(--ink); cursor: pointer;
+    -webkit-appearance: none; appearance: none; transition: transform 0.1s, background 0.1s;
+  }
+  .syl:hover { transform: translateY(-1px); }
+  .syl.on { background: var(--gold); font-weight: 800; border-color: #c9951e; }
+  .syl.gap { margin-right: 10px; }
+  .fb { margin: 8px 0; font-weight: 800; }
+  .fb.good { color: var(--success); }
+  .fb.try { color: var(--terracotta); }
+  .sort-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+  .sort-row:last-child { border-bottom: none; }
+  .sort-row span.txt { flex: 1 1 300px; font-style: italic; }
+  .choice { min-height: 44px; padding: 6px 20px; border-radius: 999px; border: 1.5px solid var(--rule-strong); background: #fff; color: var(--ink); cursor: pointer; font-family: inherit; font-weight: 800; font-size: 0.95em; -webkit-appearance: none; appearance: none; }
+  .choice.picked { background: var(--lapis); border-color: var(--lapis); color: #fff; }
+  .mark { width: 24px; font-weight: bold; }
+
+  .fix p { margin-top: 14px; margin-bottom: 0; }
+
+  /* ---------- Step nav ---------- */
+  .step-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--rule); }
+  .step-nav .spacer { flex: 1; }
+  .nav-btn { min-height: 44px; padding: 10px 20px; border-radius: 999px; font-family: inherit; font-weight: 800; font-size: 0.98em; cursor: pointer; -webkit-appearance: none; appearance: none; border: 1.5px solid var(--rule-strong); background: #fff; color: var(--ink); }
+  .nav-btn.next { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .nav-btn:hover { border-color: var(--ink); }
+
+  .footer { text-align: center; color: var(--muted); font-size: 0.85em; margin-top: 22px; }
+
+  @media (max-width: 760px) {
+    .hero { padding: 84px 20px 28px; }
+    .vine-corner { width: 120px; }
+    h1 { font-size: 2.4em; }
+    .tab-btn .lbl-long { display: none; }
+  }
+  @media (max-width: 560px) {
+    body { padding: 12px 12px 30px; font-size: 16px; }
+    .tab-content { padding: 22px 18px; border-radius: 20px; }
+    .card, .task { padding: 18px 16px; }
+    .poem { padding: 16px 18px; }
+    .lute { width: 86px; flex-basis: 86px; }
+    .intro-row { gap: 12px; align-items: flex-start; }
+    .structure { grid-template-columns: 1fr; }
+    .ln .num { width: 22px; flex-basis: 22px; }
+    .part { margin-left: 32px; }
+    .sonnet { padding-right: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="hero">
+  <svg class="vine-corner left" viewBox="0 0 170 130" aria-hidden="true">
+  <path d="M-5,18 C30,5 55,30 85,20 S140,8 175,22" fill="none" stroke="#6b4a2b" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M40,16 c-6,-10 4,-16 10,-10 c5,5 -2,10 -5,6" fill="none" stroke="#6b4a2b" stroke-width="1.8"/>
+  <path d="M120,12 c4,-10 14,-8 12,0 c-1,6 -8,5 -7,1" fill="none" stroke="#6b4a2b" stroke-width="1.8"/>
+  <g fill="#7fb654" stroke="#4f7d32" stroke-width="1.2">
+    <path transform="translate(22,14) rotate(-20) scale(1.1)" d="M0,0 C-8,-6 -18,-4 -20,6 C-14,6 -12,10 -16,16 C-8,16 -4,14 0,22 C4,14 8,16 16,16 C12,10 14,6 20,6 C18,-4 8,-6 0,0 Z"/>
+    <path transform="translate(100,24) rotate(15) scale(1.25)" d="M0,0 C-8,-6 -18,-4 -20,6 C-14,6 -12,10 -16,16 C-8,16 -4,14 0,22 C4,14 8,16 16,16 C12,10 14,6 20,6 C18,-4 8,-6 0,0 Z"/>
+    <path transform="translate(150,14) rotate(-10) scale(0.95)" d="M0,0 C-8,-6 -18,-4 -20,6 C-14,6 -12,10 -16,16 C-8,16 -4,14 0,22 C4,14 8,16 16,16 C12,10 14,6 20,6 C18,-4 8,-6 0,0 Z"/>
+  </g>
+  <path d="M68,24 L68,40" stroke="#6b4a2b" stroke-width="2"/>
+  <circle cx="50.3" cy="44.0" r="6.2" fill="#9c5cc0"/><circle cx="48.3" cy="42.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="62.1" cy="44.0" r="6.2" fill="#7b3f9e"/><circle cx="60.1" cy="42.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="73.9" cy="44.0" r="6.2" fill="#9c5cc0"/><circle cx="71.9" cy="42.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="85.7" cy="44.0" r="6.2" fill="#7b3f9e"/><circle cx="83.7" cy="42.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="56.2" cy="53.9" r="6.2" fill="#7b3f9e"/><circle cx="54.2" cy="51.9" r="1.6" fill="#fff" opacity="0.45"/><circle cx="68.0" cy="53.9" r="6.2" fill="#9c5cc0"/><circle cx="66.0" cy="51.9" r="1.6" fill="#fff" opacity="0.45"/><circle cx="79.8" cy="53.9" r="6.2" fill="#7b3f9e"/><circle cx="77.8" cy="51.9" r="1.6" fill="#fff" opacity="0.45"/><circle cx="56.2" cy="63.8" r="6.2" fill="#9c5cc0"/><circle cx="54.2" cy="61.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="68.0" cy="63.8" r="6.2" fill="#7b3f9e"/><circle cx="66.0" cy="61.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="79.8" cy="63.8" r="6.2" fill="#9c5cc0"/><circle cx="77.8" cy="61.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="62.1" cy="73.8" r="6.2" fill="#7b3f9e"/><circle cx="60.1" cy="71.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="73.9" cy="73.8" r="6.2" fill="#9c5cc0"/><circle cx="71.9" cy="71.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="68.0" cy="83.7" r="6.2" fill="#9c5cc0"/><circle cx="66.0" cy="81.7" r="1.6" fill="#fff" opacity="0.45"/>
+  <path d="M132,20 L132,32" stroke="#6b4a2b" stroke-width="2"/>
+  <circle cx="114.3" cy="36.0" r="6.2" fill="#8c4fb3"/><circle cx="112.3" cy="34.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="126.1" cy="36.0" r="6.2" fill="#6a3590"/><circle cx="124.1" cy="34.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="137.9" cy="36.0" r="6.2" fill="#8c4fb3"/><circle cx="135.9" cy="34.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="149.7" cy="36.0" r="6.2" fill="#6a3590"/><circle cx="147.7" cy="34.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="120.2" cy="45.9" r="6.2" fill="#6a3590"/><circle cx="118.2" cy="43.9" r="1.6" fill="#fff" opacity="0.45"/><circle cx="132.0" cy="45.9" r="6.2" fill="#8c4fb3"/><circle cx="130.0" cy="43.9" r="1.6" fill="#fff" opacity="0.45"/><circle cx="143.8" cy="45.9" r="6.2" fill="#6a3590"/><circle cx="141.8" cy="43.9" r="1.6" fill="#fff" opacity="0.45"/><circle cx="120.2" cy="55.8" r="6.2" fill="#8c4fb3"/><circle cx="118.2" cy="53.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="132.0" cy="55.8" r="6.2" fill="#6a3590"/><circle cx="130.0" cy="53.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="143.8" cy="55.8" r="6.2" fill="#8c4fb3"/><circle cx="141.8" cy="53.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="126.1" cy="65.8" r="6.2" fill="#6a3590"/><circle cx="124.1" cy="63.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="137.9" cy="65.8" r="6.2" fill="#8c4fb3"/><circle cx="135.9" cy="63.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="132.0" cy="75.7" r="6.2" fill="#8c4fb3"/><circle cx="130.0" cy="73.7" r="1.6" fill="#fff" opacity="0.45"/>
+</svg>
+  <svg class="vine-corner right" viewBox="0 0 170 130" aria-hidden="true">
+  <path d="M-5,18 C30,5 55,30 85,20 S140,8 175,22" fill="none" stroke="#6b4a2b" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M40,16 c-6,-10 4,-16 10,-10 c5,5 -2,10 -5,6" fill="none" stroke="#6b4a2b" stroke-width="1.8"/>
+  <path d="M120,12 c4,-10 14,-8 12,0 c-1,6 -8,5 -7,1" fill="none" stroke="#6b4a2b" stroke-width="1.8"/>
+  <g fill="#7fb654" stroke="#4f7d32" stroke-width="1.2">
+    <path transform="translate(22,14) rotate(-20) scale(1.1)" d="M0,0 C-8,-6 -18,-4 -20,6 C-14,6 -12,10 -16,16 C-8,16 -4,14 0,22 C4,14 8,16 16,16 C12,10 14,6 20,6 C18,-4 8,-6 0,0 Z"/>
+    <path transform="translate(100,24) rotate(15) scale(1.25)" d="M0,0 C-8,-6 -18,-4 -20,6 C-14,6 -12,10 -16,16 C-8,16 -4,14 0,22 C4,14 8,16 16,16 C12,10 14,6 20,6 C18,-4 8,-6 0,0 Z"/>
+    <path transform="translate(150,14) rotate(-10) scale(0.95)" d="M0,0 C-8,-6 -18,-4 -20,6 C-14,6 -12,10 -16,16 C-8,16 -4,14 0,22 C4,14 8,16 16,16 C12,10 14,6 20,6 C18,-4 8,-6 0,0 Z"/>
+  </g>
+  <path d="M68,24 L68,40" stroke="#6b4a2b" stroke-width="2"/>
+  <circle cx="50.3" cy="44.0" r="6.2" fill="#9c5cc0"/><circle cx="48.3" cy="42.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="62.1" cy="44.0" r="6.2" fill="#7b3f9e"/><circle cx="60.1" cy="42.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="73.9" cy="44.0" r="6.2" fill="#9c5cc0"/><circle cx="71.9" cy="42.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="85.7" cy="44.0" r="6.2" fill="#7b3f9e"/><circle cx="83.7" cy="42.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="56.2" cy="53.9" r="6.2" fill="#7b3f9e"/><circle cx="54.2" cy="51.9" r="1.6" fill="#fff" opacity="0.45"/><circle cx="68.0" cy="53.9" r="6.2" fill="#9c5cc0"/><circle cx="66.0" cy="51.9" r="1.6" fill="#fff" opacity="0.45"/><circle cx="79.8" cy="53.9" r="6.2" fill="#7b3f9e"/><circle cx="77.8" cy="51.9" r="1.6" fill="#fff" opacity="0.45"/><circle cx="56.2" cy="63.8" r="6.2" fill="#9c5cc0"/><circle cx="54.2" cy="61.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="68.0" cy="63.8" r="6.2" fill="#7b3f9e"/><circle cx="66.0" cy="61.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="79.8" cy="63.8" r="6.2" fill="#9c5cc0"/><circle cx="77.8" cy="61.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="62.1" cy="73.8" r="6.2" fill="#7b3f9e"/><circle cx="60.1" cy="71.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="73.9" cy="73.8" r="6.2" fill="#9c5cc0"/><circle cx="71.9" cy="71.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="68.0" cy="83.7" r="6.2" fill="#9c5cc0"/><circle cx="66.0" cy="81.7" r="1.6" fill="#fff" opacity="0.45"/>
+  <path d="M132,20 L132,32" stroke="#6b4a2b" stroke-width="2"/>
+  <circle cx="114.3" cy="36.0" r="6.2" fill="#8c4fb3"/><circle cx="112.3" cy="34.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="126.1" cy="36.0" r="6.2" fill="#6a3590"/><circle cx="124.1" cy="34.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="137.9" cy="36.0" r="6.2" fill="#8c4fb3"/><circle cx="135.9" cy="34.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="149.7" cy="36.0" r="6.2" fill="#6a3590"/><circle cx="147.7" cy="34.0" r="1.6" fill="#fff" opacity="0.45"/><circle cx="120.2" cy="45.9" r="6.2" fill="#6a3590"/><circle cx="118.2" cy="43.9" r="1.6" fill="#fff" opacity="0.45"/><circle cx="132.0" cy="45.9" r="6.2" fill="#8c4fb3"/><circle cx="130.0" cy="43.9" r="1.6" fill="#fff" opacity="0.45"/><circle cx="143.8" cy="45.9" r="6.2" fill="#6a3590"/><circle cx="141.8" cy="43.9" r="1.6" fill="#fff" opacity="0.45"/><circle cx="120.2" cy="55.8" r="6.2" fill="#8c4fb3"/><circle cx="118.2" cy="53.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="132.0" cy="55.8" r="6.2" fill="#6a3590"/><circle cx="130.0" cy="53.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="143.8" cy="55.8" r="6.2" fill="#8c4fb3"/><circle cx="141.8" cy="53.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="126.1" cy="65.8" r="6.2" fill="#6a3590"/><circle cx="124.1" cy="63.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="137.9" cy="65.8" r="6.2" fill="#8c4fb3"/><circle cx="135.9" cy="63.8" r="1.6" fill="#fff" opacity="0.45"/><circle cx="132.0" cy="75.7" r="6.2" fill="#8c4fb3"/><circle cx="130.0" cy="73.7" r="1.6" fill="#fff" opacity="0.45"/>
+</svg>
+    <p class="eyebrow">Petrarchan Sonnet Workshop</p>
+    <h1>Poetry Lab</h1>
+    <p class="subtitle">Inspired by Elizabeth Barrett Browning’s <span style="white-space:nowrap">Sonnet 43</span></p>
+    <div class="chips"><span class="chip">14 lines</span><span class="chip">8 + 6</span><span class="chip">1 turn</span></div>
+  </header>
+
+  <nav class="tabs-wrap" aria-label="Lesson steps">
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="contrast" onclick="showTab('contrast', this)"><span class="n">1</span>Contrast</button>
+      <button class="tab-btn" data-tab="form" onclick="showTab('form', this)"><span class="n">2</span>The Form</button>
+      <button class="tab-btn" data-tab="meter" onclick="showTab('meter', this)"><span class="n">3</span><span>Meter<span class="lbl-long"> &amp; Rhythm</span></span></button>
+      <button class="tab-btn" data-tab="ideas" onclick="showTab('ideas', this)"><span class="n">4</span>Idea Spark</button>
+      <button class="tab-btn" data-tab="draft" onclick="showTab('draft', this)"><span class="n">5</span><span>Draft<span class="lbl-long"> Together</span></span></button>
+    </div>
+  </nav>
+
+  <!-- ================= 1. CONTRAST ================= -->
+  <section id="contrast" class="tab-content active">
+    <div class="intro-row">
+      <div>
+        <p class="eyebrow">Step 1 · Contrast</p>
+        <h2>Two Ways of Speaking</h2>
+        <p class="lead">Free verse feels like talking. A sonnet feels like singing with rules.</p>
+        <p class="lute-caption"><strong>Did you know?</strong> The word <em>sonnet</em> comes from the Italian <em>sonetto</em>, which means “little song.” In Petrarch’s time, poetry and music were close cousins, and the lute was one of the most popular instruments in Italy.</p>
+      </div>
+      <svg class="lute" viewBox="0 0 200 330" role="img" aria-label="A lute">
+        <defs>
+          <radialGradient id="luteTop" cx="45%" cy="40%" r="70%">
+            <stop offset="0" stop-color="#f6d9a3"/><stop offset="1" stop-color="#d9a25e"/>
+          </radialGradient>
+        </defs>
+        <g transform="rotate(-16 100 200)">
+          <path d="M88,46 L112,46 L134,8 L116,2 Z" fill="#5a3a1e"/>
+          <g fill="#3b2412"><circle cx="111" cy="12" r="3.2"/><circle cx="118" cy="24" r="3.2"/><circle cx="104" cy="30" r="3.2"/><circle cx="126" cy="10" r="3.2"/><circle cx="96" cy="40" r="3.2"/></g>
+          <rect x="88" y="44" width="24" height="106" rx="3" fill="#7a4a24"/>
+          <g stroke="#c9a06a" stroke-width="1.4"><line x1="88" y1="62" x2="112" y2="62"/><line x1="88" y1="80" x2="112" y2="80"/><line x1="88" y1="96" x2="112" y2="96"/><line x1="88" y1="111" x2="112" y2="111"/><line x1="88" y1="125" x2="112" y2="125"/><line x1="88" y1="138" x2="112" y2="138"/></g>
+          <path d="M100,142 C152,142 178,204 174,246 C170,296 136,320 100,320 C64,320 30,296 26,246 C22,204 48,142 100,142 Z" fill="url(#luteTop)" stroke="#8a5528" stroke-width="5"/>
+          <circle cx="100" cy="214" r="24" fill="#5a3a1e"/>
+          <g fill="none" stroke="#f0cf96" stroke-width="1.6">
+            <circle cx="100" cy="214" r="18"/><circle cx="100" cy="214" r="10"/>
+            <path d="M100,196 L100,232 M82,214 L118,214 M87,201 L113,227 M113,201 L87,227"/>
+          </g>
+          <circle cx="100" cy="214" r="24" fill="none" stroke="#8a5528" stroke-width="2.5"/>
+          <rect x="74" y="274" width="52" height="8" rx="3" fill="#5a3a1e"/>
+          <g stroke="#fff8ea" stroke-width="0.9"><line x1="92" y1="46" x2="86" y2="276"/><line x1="96" y1="46" x2="93" y2="276"/><line x1="100" y1="46" x2="100" y2="276"/><line x1="104" y1="46" x2="107" y2="276"/><line x1="108" y1="46" x2="114" y2="276"/></g>
+        </g>
+      </svg>
+    </div>
+    <div class="note">
+      <strong>Note:</strong> A <strong>Petrarchan sonnet</strong> is also known as an <strong>Italian sonnet</strong>. It is named after the Italian poet <strong>Petrarch</strong> (Francesco Petrarca, 1304–1374), who made this form famous in the 14th century by writing hundreds of sonnets about his love for a woman named Laura.
+    </div>
+    <div class="task">
+      <p class="eyebrow">Your task</p>
+      <h3>Compare two poems</h3>
+      <p>The two poems below are <strong>not</strong> the same kind of poem:</p>
+      <ul>
+        <li><strong>Fog</strong> is <strong>free verse</strong>. It has no set rhyme, no set beat and no set length. It is <strong>not</strong> a sonnet.</li>
+        <li><strong>Sonnet 43</strong> is a <strong>sonnet</strong>. It follows strict rules for rhyme, rhythm and length.</li>
+      </ul>
+      <p style="margin-bottom:0;"><strong>Read both aloud, then answer:</strong> Which one feels more like a conversation? Which one feels more shaped and measured? What makes you say so?</p>
+    </div>
+    <div class="card">
+      <span class="badge badge-free">Free verse: NOT a sonnet</span>
+      <h3>Fog (Carl Sandburg)</h3>
+      <div class="poem">
+        The fog comes<br>
+        on little cat feet.<br>
+        <br>
+        It sits looking<br>
+        over harbor and city<br>
+        on silent haunches<br>
+        and then moves on.
+      </div>
+      <p style="font-size:0.9em; color:var(--muted); margin-top:8px;"><em>harbor</em> = a sheltered place by the sea where boats stay &nbsp;•&nbsp; <em>haunches</em> = the back legs and hips of an animal when it sits</p>
+      <div class="note" style="margin-bottom:0;"><strong>Free verse has its own power.</strong> It has no rules for rhyme or beat, but every choice still matters. Sandburg uses three tools:
+        <ul style="margin:8px 0 0 0;">
+          <li><strong>Line breaks:</strong> he stops each line early so you read slowly, like fog creeping in.</li>
+          <li><strong>White space:</strong> the gap between the two parts is a pause, like the fog sitting still before it moves on.</li>
+          <li><strong>An image:</strong> the fog is pictured as a cat, with quiet feet and silent haunches.</li>
+        </ul></div>
+    </div>
+    <div class="card">
+      <span class="badge badge-sonnet">Sonnet</span>
+      <h3>Sonnet 43 (Elizabeth Barrett Browning): the first four lines</h3>
+      <div class="poem">
+        How do I love thee? Let me count the ways.<br>
+        I love thee to the depth and breadth and height<br>
+        My soul can reach, when feeling out of sight<br>
+        For the ends of being and ideal grace.
+      </div>
+    </div>
+    <div class="step-nav"><span class="spacer"></span><button type="button" class="nav-btn next" onclick="goTab('form')">Next: The Form →</button></div>
+  </section>
+
+  <!-- ================= 2. FORM ================= -->
+  <section id="form" class="tab-content">
+    <p class="eyebrow">Step 2 · The Form</p>
+    <h2>Petrarchan Sonnet Structure</h2>
+    <p class="lead">14 lines. One big idea that turns.</p>
+    <div class="structure">
+      <div class="blk">
+        <h3>Octave</h3>
+        <p>Lines 1–8 · sets up the situation or problem</p>
+        <span class="scheme" aria-label="Rhyme A B B A A B B A"><span class="a">A</span><span class="b">B</span><span class="b">B</span><span class="a">A</span><span class="a">A</span><span class="b">B</span><span class="b">B</span><span class="a">A</span></span>
+      </div>
+      <div class="blk sestet">
+        <h3>Sestet</h3>
+        <p>Lines 9–14 · the turn (volta) and resolution</p>
+        <span class="scheme" aria-label="Rhyme often C D C D C D"><span class="c">C</span><span class="d">D</span><span class="c">C</span><span class="d">D</span><span class="c">C</span><span class="d">D</span></span>
+        <p style="margin:6px 0 0; font-size:0.85em;">or similar</p>
+      </div>
+    </div>
+
+    <h3>Sonnet 43 – Full Text with Rhyme Colors</h3>
+    <p class="line-count">Tap the <span style="border-bottom:2px dotted var(--lapis);">dotted words</span> in lines 3 and 4 to see what they mean.</p>
+    <div class="sonnet">
+      <div class="part">Octave · lines 1–8</div>
+      <div class="ln"><span class="num">1</span><span class="txt">How do I love thee? Let me count the <span class="rw a">ways</span>.</span><span class="rl a">A</span></div>
+      <div class="ln"><span class="num">2</span><span class="txt">I love thee to the depth and breadth and <span class="rw b">height</span></span><span class="rl b">B</span></div>
+      <div class="ln"><span class="num">3</span><span class="txt">My soul can reach, when <button type="button" class="gloss" data-word="feeling" data-def="reaching or groping, the way you feel your way in the dark with your hands. It is not about emotions here.">feeling</button> <button type="button" class="gloss" data-word="out of sight" data-def="beyond what can be seen: the invisible, spiritual world. It does not mean “awesome” here!">out of <span class="rw b">sight</span></button></span><span class="rl b">B</span></div>
+      <div class="ln"><span class="num">4</span><span class="txt">For <button type="button" class="gloss" data-word="the ends of being" data-def="the purpose of existence, what life is really for. “Ends” means goals here.">the ends of being</button> and <button type="button" class="gloss" data-word="ideal grace" data-def="perfect grace: God’s love and kindness, given freely.">ideal <span class="rw a">grace</span></button>.</span><span class="rl a">A</span></div>
+      <div class="ln"><span class="num">5</span><span class="txt">I love thee to the level of every <span class="rw a">day’s</span></span><span class="rl a">A</span></div>
+      <div class="ln"><span class="num">6</span><span class="txt">Most quiet need, by sun and candle-<span class="rw b">light</span>.</span><span class="rl b">B</span></div>
+      <div class="ln"><span class="num">7</span><span class="txt">I love thee freely, as men strive for <span class="rw b">right</span>;</span><span class="rl b">B</span></div>
+      <div class="ln"><span class="num">8</span><span class="txt">I love thee purely, as they turn from <span class="rw a">praise</span>.</span><span class="rl a">A</span></div>
+      <div class="part volta">Sestet · the turn comes at line 9</div>
+      <div class="ln l9"><span class="num">9</span><span class="txt">I love thee with the passion put to <span class="rw c">use</span></span><span class="rl c">C</span></div>
+      <div class="ln"><span class="num">10</span><span class="txt">In my old griefs, and with my childhood’s <span class="rw d">faith</span>.</span><span class="rl d">D</span></div>
+      <div class="ln"><span class="num">11</span><span class="txt">I love thee with a love I seemed to <span class="rw c">lose</span></span><span class="rl c">C</span></div>
+      <div class="ln"><span class="num">12</span><span class="txt">With my lost saints. I love thee with the <span class="rw d">breath</span>,</span><span class="rl d">D</span></div>
+      <div class="ln"><span class="num">13</span><span class="txt">Smiles, tears, of all my life; and, if God <span class="rw c">choose</span>,</span><span class="rl c">C</span></div>
+      <div class="ln"><span class="num">14</span><span class="txt">I shall but love thee better after <span class="rw d">death</span>.</span><span class="rl d">D</span></div>
+    </div>
+    <div id="glossBox" class="gloss-box" aria-live="polite">
+      <div id="glossText">Tap a dotted word in the poem.</div>
+      <div id="glossPlain" style="display:none; margin-top:8px;"><strong>Lines 2–4 in plain English:</strong> My love for you goes as far as my soul can stretch when it reaches into the unseen for the meaning of life and for God’s perfect grace.</div>
+    </div>
+    <div class="note">
+      <strong>What is a volta?</strong> <em>Volta</em> is the Italian word for <strong>turn</strong>. At line 9, the poem turns in a new direction. It is the <strong>“but” moment</strong>: the first eight lines say one thing, then the poem says <em>but</em>, <em>yet</em> or <em>not only that</em>, and changes direction. It might answer a question, show a problem, or look at the idea in a surprising new way.
+    </div>
+    <p>In Sonnet 43, lines 1–8 show how she loves right now. At line 9 the poem turns to <em>time</em>: her love holds her old griefs, her childhood faith, and will last even after death.</p>
+    <div class="card">
+      <p class="eyebrow">Hidden echo</p>
+      <h3>Browning borrows from the Bible</h3>
+      <p>Browning’s readers knew the King James Bible very well. Here is a verse from a letter by Paul (Ephesians 3:18–19). He prays that people will understand how big God’s love is:</p>
+      <div class="poem">…that ye may be able to comprehend with all saints what is the breadth, and length, and depth, and height; and to know the love of Christ, which passeth knowledge…</div>
+      <p style="font-size:0.9em; color:var(--muted); margin-top:8px;"><em>comprehend</em> = understand &nbsp;•&nbsp; <em>passeth knowledge</em> = is too big to know</p>
+      <p><strong>1.</strong> Tap the <strong>three measuring words</strong> in Browning’s line 2 that also appear in the Bible verse.</p>
+      <div id="echoLine" class="mark-line"></div>
+      <button class="btn" onclick="checkEcho()">Check</button>
+      <div id="echo-fb" class="fb"></div>
+      <p style="margin-top:16px;"><strong>2.</strong> Look at line 12: <em>“With my lost saints. I love thee with the breath…”</em> Which word there also comes from the verse?</p>
+      <input type="text" id="echoWord" placeholder="Type the word...">
+      <button class="btn" onclick="checkEchoWord()">Check</button>
+      <div id="echoWord-fb" class="fb"></div>
+      <div id="echoWhy" class="note" style="display:none;">
+        <strong>Why does she do this?</strong> The Bible uses these words to measure God’s love, a love too big to measure. Browning uses the same words for her own love, so it sounds just as huge. Her first quatrain measures love like space, and the space words come straight from the Bible.
+      </div>
+    </div>
+    <div class="step-nav"><button type="button" class="nav-btn" onclick="goTab('contrast')">← Back</button><button type="button" class="nav-btn next" onclick="goTab('meter')">Next: Meter →</button></div>
+  </section>
+
+  <!-- ================= 3. METER ================= -->
+  <section id="meter" class="tab-content">
+    <p class="eyebrow">Step 3 · Meter &amp; Rhythm</p>
+    <h2>Iambic Pentameter</h2>
+    <p>An <strong>iamb</strong> is a soft beat followed by a strong beat: da-<strong>DUM</strong>.</p>
+    <p><strong>Pentameter</strong> means five of those per line:</p>
+    <p class="beats">da-<b>DUM</b> &nbsp; da-<b>DUM</b> &nbsp; da-<b>DUM</b> &nbsp; da-<b>DUM</b> &nbsp; da-<b>DUM</b></p>
+    <div class="meter-demo">
+      <p class="eyebrow" style="color:var(--muted);">From Browning’s Sonnet 43</p>
+      <div class="meter-line">
+        <span class="unstress">I</span> <span class="stress">LOVE</span>
+        <span class="unstress">thee</span> <span class="stress">TO</span>
+        <span class="unstress">the</span> <span class="stress">DEPTH</span>
+        <span class="unstress">and</span> <span class="stress">BREADTH</span>
+        <span class="unstress">and</span> <span class="stress">HEIGHT</span>
+      </div>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Warm up</p>
+      <p style="margin:0;">Say the line slowly and clap on the strong beats (the highlighted words). Your heartbeat does the same da-DUM all day. A sonnet line is about five heartbeats long.</p>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Activity 1</p>
+      <h3>Mark the beats</h3>
+      <p>Here are two more lines from Sonnet 43. Read each one aloud. Tap every syllable you hear as <strong>strong</strong>. Tap again to undo. Then check.</p>
+      <div id="mark1" class="mark-line"></div>
+      <button class="btn" onclick="checkMark('mark1')">Check</button>
+      <div id="mark1-fb" class="fb"></div>
+      <div id="mark2" class="mark-line" style="margin-top:18px;"></div>
+      <button class="btn" onclick="checkMark('mark2')">Check</button>
+      <div id="mark2-fb" class="fb"></div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Activity 2</p>
+      <h3>Sonnet line or not?</h3>
+      <p>Read each line aloud. Is it <strong>iambic pentameter</strong> (10 syllables, da-DUM five times)? Choose Yes or No.</p>
+      <div id="sortList"></div>
+      <button class="btn" onclick="checkSort()">Check my answers</button>
+      <div id="sort-fb" class="fb"></div>
+    </div>
+
+    <div class="card fix">
+      <p class="eyebrow">Activity 3</p>
+      <h3>Fix the line</h3>
+      <p>These lines are broken. Rewrite each one so it has 10 syllables and the da-DUM beat. Keep the same idea.</p>
+      <p><strong>a)</strong> <em>My dog is the best friend that I have ever had in my life</em> (too long)</p>
+      <input type="text" id="fixA" placeholder="Your fixed line...">
+      <div class="line-count" id="fixA-count">0 syllables (approx.)</div>
+      <p><strong>b)</strong> <em>The stars shine bright</em> (too short)</p>
+      <input type="text" id="fixB" placeholder="Your fixed line...">
+      <div class="line-count" id="fixB-count">0 syllables (approx.)</div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Activity 4</p>
+      <h3>Your own line</h3>
+      <p>Write one line about anything you like in iambic pentameter. Read it aloud and clap the five strong beats. Then write it again in CAPITALS for the strong syllables, like this: <em>i LOVE thee TO the DEPTH and BREADTH and HEIGHT</em>.</p>
+      <input type="text" id="ownLine" placeholder="My line...">
+      <div class="line-count" id="ownLine-count">0 syllables (approx.)</div>
+      <input type="text" id="ownLineMarked" placeholder="My line with the strong syllables in CAPITALS...">
+    </div>
+    <div class="step-nav"><button type="button" class="nav-btn" onclick="goTab('form')">← Back</button><button type="button" class="nav-btn next" onclick="goTab('ideas')">Next: Idea Spark →</button></div>
+  </section>
+
+  <!-- ================= 4. IDEAS ================= -->
+  <section id="ideas" class="tab-content">
+    <p class="eyebrow">Step 4 · Idea Spark</p>
+    <h2>Spark an Idea – Is / Isn’t</h2>
+    <p class="lead">Don’t start with the rhyme. Start with meaning. Pick something you care about.</p>
+    <div class="card">
+      <p class="eyebrow">Brainstorm</p>
+      <p>Write down every idea that comes to mind, fast. Single words are fine. Nothing has to be good or rhyme yet. You’ll pick the best ones later.</p>
+      <label for="topic"><strong>My topic is:</strong></label>
+      <input type="text" id="topic" placeholder="e.g. my dog, a best friend, a place I love">
+      <label for="isList"><strong>It IS like…</strong></label>
+      <textarea id="isList" placeholder="Anything it reminds you of: sunlight, a warm blanket, a quiet morning..."></textarea>
+      <label for="isntList"><strong>It is NOT like…</strong></label>
+      <textarea id="isntList" placeholder="Anything that is the opposite: a storm, a locked door, a forgotten toy..."></textarea>
+    </div>
+    <p>These comparisons become the raw material for your quatrains (groups of four lines).</p>
+
+    <div class="note">
+      <strong>One subject, three angles.</strong> Your whole sonnet is about <em>one</em> thing. Each quatrain looks at it from a new angle. Browning does this in Sonnet 43:
+      <ul style="margin:8px 0 8px 0;">
+        <li><strong>Quatrain 1 (lines 1–4):</strong> her love measured like <em>space</em>: depth, breadth and height.</li>
+        <li><strong>Quatrain 2 (lines 5–8):</strong> her love in <em>everyday life</em>: by sun and candle-light, freely, purely.</li>
+        <li><strong>The turn (line 9 on):</strong> her love across <em>time</em>: her old griefs, her childhood, and even after death.</li>
+      </ul>
+      Same subject all the way through. A new picture each time.
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Plan your sonnet</p>
+      <label for="planQ1"><strong>Quatrain 1 (lines 1–4):</strong> Which comparison from your IS list is the strongest? What picture will you start with?</label>
+      <textarea id="planQ1" placeholder="e.g. My dog is like sunlight: warm, always there in the morning..."></textarea>
+      <label for="planQ2"><strong>Quatrain 2 (lines 5–8):</strong> Same subject, new angle. Choose a <em>different</em> picture of the same feeling, or take your first picture further.</label>
+      <textarea id="planQ2" placeholder="e.g. My dog is like a quiet morning: calm when the house is noisy..."></textarea>
+      <div class="note" style="margin-top:20px; background:var(--terracotta-soft); border-color:#efc4b3;">
+        <strong>Remember the volta.</strong> <em>Volta</em> is Italian for <strong>turn</strong>. At line 9 your poem turns in a new direction. It is the <strong>“but” moment</strong>: lines 1–8 say one thing, then the poem says <em>but</em>, <em>yet</em> or <em>not only that</em> and changes direction. It might answer a question, show a problem, or look at your subject in a surprising new way. Your IS NOT list can help you find it.
+      </div>
+      <label for="planTurn"><strong>The volta, or turn (line 9):</strong> This is your “but” moment. What changes? Look at your IS NOT list. Start with <em>But…</em>, <em>Yet…</em> or <em>And then…</em></label>
+      <textarea id="planTurn" placeholder="e.g. But one day he will grow old, and then..."></textarea>
+    </div>
+    <div class="step-nav"><button type="button" class="nav-btn" onclick="goTab('meter')">← Back</button><button type="button" class="nav-btn next" onclick="goTab('draft')">Next: Draft →</button></div>
+  </section>
+
+  <!-- ================= 5. DRAFT ================= -->
+  <section id="draft" class="tab-content">
+    <p class="eyebrow">Step 5 · Draft Together</p>
+    <h2>Draft Live</h2>
+    <p class="lead">Start with Quatrain 1 from your plan (4 lines). Aim for 10 syllables in each line. We’ll refine the rhythm together.</p>
+    <div class="card" id="planView">
+      <p class="eyebrow">My plan (from step 4)</p>
+      <p><strong>Quatrain 1:</strong> <span id="pvQ1"></span></p>
+      <p><strong>Quatrain 2:</strong> <span id="pvQ2"></span></p>
+      <p><strong>The volta (line 9):</strong> <span id="pvTurn"></span></p>
+      <p class="line-count" style="margin-bottom:0;">Turn your Quatrain 1 idea into four lines below.</p>
+    </div>
+    <label for="draftBox"><strong>My first four lines</strong></label>
+    <textarea id="draftBox" placeholder="Write your first four lines here..." style="min-height:150px; font-family:'Fraunces', Georgia, serif; font-size:1.08em; line-height:1.7;"></textarea>
+    <div class="line-count" id="lineInfo">0 lines • approx. 0 syllables</div>
+    <button class="btn" onclick="analyzeDraft()">Check Lines</button>
+    <button class="btn btn-export" onclick="exportWork()">Export My Work</button>
+    <div id="exportStatus" class="export-status">Copied to clipboard! Paste it into your Google Doc.</div>
+    <div id="analysis" style="margin-top:15px;"></div>
+    <div class="task" style="margin-top:22px;">
+      <p class="eyebrow">Take-home</p>
+      <p style="margin:0;">Finish the full 14-line Petrarchan sonnet. Remember the turn at line 9.</p>
+    </div>
+    <div class="step-nav"><button type="button" class="nav-btn" onclick="goTab('ideas')">← Back</button><span class="spacer"></span></div>
+  </section>
+
+  <p class="footer">Poetry Lab</p>
+</div>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) {
+    btn.classList.add('active');
+    const bar = document.getElementById('tabs');
+    if (bar.scrollWidth > bar.clientWidth) bar.scrollLeft = btn.offsetLeft - 16;
+  }
+  if (id === 'draft') updatePlanView();
+}
+function goTab(id) {
+  showTab(id, document.querySelector('.tab-btn[data-tab="' + id + '"]'));
+  const top = document.querySelector('.tabs-wrap').getBoundingClientRect().top + window.pageYOffset;
+  window.scrollTo(0, top);
+}
+
+function updatePlanView() {
+  [['planQ1','pvQ1'],['planQ2','pvQ2'],['planTurn','pvTurn']].forEach(([from, to]) => {
+    const v = document.getElementById(from).value.trim();
+    const el = document.getElementById(to);
+    el.textContent = v || '(not filled in yet: go back to step 4)';
+    el.style.color = v ? '' : '#8a8195';
+  });
+}
+
+/* ---------- Syllable estimate (approximate) ---------- */
+function syllablesInWord(word) {
+  let w = word.toLowerCase().replace(/[^a-z]/g, '');
+  if (!w) return 0;
+  if (w.length <= 3) return 1;
+  w = w.replace(/(?:[^laeiouy]es|[^laeiouy]e)$/, '');
+  w = w.replace(/^y/, '');
+  const m = w.match(/[aeiouy]{1,2}/g);
+  return m ? m.length : 1;
+}
+function syllablesInLine(line) {
+  return (line.match(/[A-Za-z']+/g) || []).reduce((n, w) => n + syllablesInWord(w), 0);
+}
+function liveCount(inputId) {
+  const el = document.getElementById(inputId);
+  const out = document.getElementById(inputId + '-count');
+  el.addEventListener('input', () => {
+    const n = syllablesInLine(el.value);
+    out.textContent = n + ' syllables (approx.)' + (n === 10 ? ' ✓' : '');
+  });
+}
+
+/* ---------- Activity 1: Mark the beats ---------- */
+const markLines = {
+  mark1: { syl: ['Most','qui','et','need,','by','sun','and','can','dle','light.'], gapAfter: [0,2,3,4,5,6] },
+  mark2: { syl: ['I','shall','but','love','thee','bet','ter','af','ter','death.'], gapAfter: [0,1,2,3,4,6] }
+};
+function buildMark(id) {
+  const box = document.getElementById(id);
+  markLines[id].syl.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'syl' + (markLines[id].gapAfter.includes(i) ? ' gap' : '');
+    b.textContent = s;
+    b.addEventListener('click', () => b.classList.toggle('on'));
+    box.appendChild(b);
+  });
+}
+function checkMark(id) {
+  const btns = document.querySelectorAll('#' + id + ' .syl');
+  let right = 0;
+  btns.forEach((b, i) => {
+    const shouldBeStrong = (i % 2 === 1);
+    if (b.classList.contains('on') === shouldBeStrong) right++;
+  });
+  const fb = document.getElementById(id + '-fb');
+  if (right === 10) {
+    fb.className = 'fb good';
+    fb.textContent = '✓ Perfect! da-DUM da-DUM da-DUM da-DUM da-DUM.';
+  } else {
+    fb.className = 'fb try';
+    fb.textContent = right + ' of 10 syllables match. Read it aloud again. Hint: the strong beats fall on syllables 2, 4, 6, 8 and 10.';
+  }
+}
+
+/* ---------- Hidden echo ---------- */
+const echoWords = ['I','love','thee','to','the','depth','and','breadth','and','height'];
+const echoAnswers = [5, 7, 9];
+let echoDone = { taps: false, word: false };
+function buildEcho() {
+  const box = document.getElementById('echoLine');
+  echoWords.forEach(w => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'syl'; b.textContent = w;
+    b.addEventListener('click', () => b.classList.toggle('on'));
+    box.appendChild(b);
+  });
+}
+function showEchoWhy() {
+  if (echoDone.taps && echoDone.word) document.getElementById('echoWhy').style.display = 'block';
+}
+function checkEcho() {
+  const on = [];
+  document.querySelectorAll('#echoLine .syl').forEach((b, i) => { if (b.classList.contains('on')) on.push(i); });
+  const fb = document.getElementById('echo-fb');
+  if (on.length === 3 && echoAnswers.every(i => on.includes(i))) {
+    fb.className = 'fb good'; fb.textContent = '✓ Yes: depth, breadth and height.';
+    echoDone.taps = true; showEchoWhy();
+  } else {
+    fb.className = 'fb try'; fb.textContent = 'Not yet. Look for three words that measure size.';
+  }
+}
+function checkEchoWord() {
+  const v = document.getElementById('echoWord').value.trim().toLowerCase().replace(/[^a-z]/g, '');
+  const fb = document.getElementById('echoWord-fb');
+  if (v === 'saints' || v === 'saint') {
+    fb.className = 'fb good'; fb.textContent = '✓ Yes: “with all saints” becomes “with my lost saints.”';
+    echoDone.word = true; showEchoWhy();
+  } else {
+    fb.className = 'fb try'; fb.textContent = 'Not yet. Find a word in line 12 that is also in the verse.';
+  }
+}
+
+/* ---------- Glosses ---------- */
+const glossSeen = new Set();
+document.querySelectorAll('.gloss').forEach(b => {
+  b.addEventListener('click', () => {
+    document.getElementById('glossText').innerHTML = '<strong>' + b.dataset.word + '</strong> = ' + b.dataset.def;
+    b.classList.add('seen');
+    glossSeen.add(b.dataset.word);
+    if (glossSeen.size === document.querySelectorAll('.gloss').length) document.getElementById('glossPlain').style.display = 'block';
+  });
+});
+
+/* ---------- Activity 2: Sonnet line or not? ---------- */
+const sortItems = [
+  { line: 'Butterflies dance over the garden', ans: 'no',  why: 'Only 9 syllables, and it starts on a strong beat: BUT-ter-flies.' },
+  { line: 'The kettle sings beside the window glass', ans: 'yes', why: 'the KET-tle SINGS be-SIDE the WIN-dow GLASS: 10 syllables, five da-DUMs.' },
+  { line: 'The moon is quiet when the house is still', ans: 'yes', why: 'the MOON is QUI-et WHEN the HOUSE is STILL: 10 syllables, five da-DUMs.' },
+  { line: 'My little brother ran across the yard to catch the ball', ans: 'no', why: '14 syllables. Too long for one sonnet line.' },
+  { line: 'I wait for summer like a sleepy cat', ans: 'yes', why: 'i WAIT for SUM-mer LIKE a SLEE-py CAT: 10 syllables, five da-DUMs.' },
+  { line: 'Pizza is the best food in the world', ans: 'no', why: 'Only 9 syllables, and it starts on a strong beat: PIZ-za.' }
+];
+const sortPicks = {};
+function buildSort() {
+  const box = document.getElementById('sortList');
+  sortItems.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'sort-row';
+    row.innerHTML = '<span class="mark" id="sortMark' + i + '"></span><span class="txt">' + (i + 1) + '. ' + item.line + '</span>';
+    ['yes', 'no'].forEach(v => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'choice';
+      b.textContent = v === 'yes' ? 'Yes' : 'No';
+      b.addEventListener('click', () => {
+        sortPicks[i] = v;
+        row.querySelectorAll('.choice').forEach(c => c.classList.remove('picked'));
+        b.classList.add('picked');
+      });
+      row.appendChild(b);
+    });
+    const why = document.createElement('div');
+    why.id = 'sortWhy' + i;
+    why.style.cssText = 'flex-basis:100%; font-size:0.9em; color:#625a70; display:none;';
+    row.appendChild(why);
+    box.appendChild(row);
+  });
+}
+function checkSort() {
+  let right = 0, answered = 0;
+  sortItems.forEach((item, i) => {
+    const mark = document.getElementById('sortMark' + i);
+    const why = document.getElementById('sortWhy' + i);
+    if (!sortPicks[i]) { mark.textContent = ''; why.style.display = 'none'; return; }
+    answered++;
+    if (sortPicks[i] === item.ans) { right++; mark.textContent = '✓'; mark.style.color = '#1e8449'; }
+    else { mark.textContent = '✗'; mark.style.color = '#a04000'; }
+    why.textContent = item.why;
+    why.style.display = 'block';
+  });
+  const fb = document.getElementById('sort-fb');
+  fb.className = 'fb ' + (right === sortItems.length ? 'good' : 'try');
+  fb.textContent = right + ' of ' + sortItems.length + ' correct' + (answered < sortItems.length ? ' (some lines not answered yet)' : '') + '.';
+}
+
+/* ---------- Draft ---------- */
+function analyzeDraft() {
+  const text = document.getElementById('draftBox').value.trim();
+  const lines = text.split('\n').filter(l => l.trim());
+  const counts = lines.map(syllablesInLine);
+  document.getElementById('lineInfo').textContent = lines.length + ' lines • syllables per line (approx.): ' + (counts.join(', ') || '0');
+  const analysis = document.getElementById('analysis');
+  analysis.innerHTML = '<div class="card"><strong>Quick check:</strong><br>' +
+    (lines.length === 4 ? '✓ Four lines – perfect for a quatrain.' : 'Aim for exactly 4 lines to start.') +
+    '<br>' + (counts.length && counts.every(n => n >= 9 && n <= 11) ? '✓ Every line is close to 10 syllables.' : 'Aim for about 10 syllables in each line.') +
+    '<br>Read it aloud and feel the da-DUM beat.</div>';
+}
+
+/* ---------- Export ---------- */
+function val(id, empty) { return document.getElementById(id).value.trim() || empty; }
+function exportWork() {
+  const e = '(not filled in yet)';
+  const today = new Date().toLocaleDateString('en-CA');
+  const exportText = `Poetry Lab – Petrarchan Sonnet
+Date: ${today}
+Lesson: Petrarchan Sonnet (Elizabeth Barrett Browning)
+
+METER PRACTICE
+Fixed line a): ${val('fixA', e)}
+Fixed line b): ${val('fixB', e)}
+My own line: ${val('ownLine', e)}
+Strong beats marked: ${val('ownLineMarked', e)}
+
+TOPIC
+${val('topic', e)}
+
+IT IS LIKE…
+${val('isList', e)}
+
+IT IS NOT LIKE…
+${val('isntList', e)}
+
+PLAN
+Quatrain 1: ${val('planQ1', e)}
+Quatrain 2: ${val('planQ2', e)}
+The turn (line 9): ${val('planTurn', e)}
+
+DRAFT
+${val('draftBox', '(no draft yet)')}
+
+---
+Remember the volta (turn) at line 9 when you finish the full sonnet.`;
+
+  const ok = () => {
+    const status = document.getElementById('exportStatus');
+    status.style.display = 'block';
+    setTimeout(() => { status.style.display = 'none'; }, 4000);
+  };
+  const fallback = () => {
+    const ta = document.createElement('textarea');
+    ta.value = exportText;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed; top:0; left:0; opacity:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, exportText.length);
+    let copied = false;
+    try { copied = document.execCommand('copy'); } catch (err) {}
+    document.body.removeChild(ta);
+    if (copied) { ok(); return; }
+    const box = document.getElementById('analysis');
+    box.innerHTML = '<div class="card"><strong>Copy this text into your Google Doc:</strong><textarea style="min-height:260px;">' +
+      exportText.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</textarea></div>';
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(exportText).then(ok).catch(fallback);
+  } else {
+    fallback();
+  }
+}
+
+buildMark('mark1');
+buildMark('mark2');
+buildSort();
+buildEcho();
+['fixA', 'fixB', 'ownLine'].forEach(liveCount);
+document.getElementById('draftBox').addEventListener('input', analyzeDraft);
+updatePlanView();
+</script>
+</body>
+</html>
