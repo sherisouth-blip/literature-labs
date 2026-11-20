@@ -693,17 +693,42 @@ function updatePlanView() {
 }
 
 /* ---------- Syllable estimate (approximate) ---------- */
+const SYL_EXCEPTIONS = {
+  eye:1, eyes:1, poem:2, poems:2, poet:2, poets:2, poetry:3, truest:2, every:2, evening:2, evenings:2, beautiful:3, quiet:2, quietly:3,
+  being:2, area:3, idea:3, ideas:3, people:2, fire:1, fires:1, hour:1, hours:1, our:1, ours:1, flower:2, flowers:2, power:2, powers:2,
+  heaven:2, heavens:2, lion:2, science:2, create:2, created:3, video:3, radio:3, piano:3, cruel:2, fuel:2, jewel:2, diet:2, quite:1,
+  business:2, different:3, family:3, chocolate:3, interesting:3, favourite:3, favorite:3, camera:3, natural:3, several:3, general:3,
+  temperate:3, everything:3, everyone:3, everybody:4, sometime:2, sometimes:2, someone:2, something:2, somewhere:2, nowhere:2, anywhere:3,
+  homework:2, tonight:2, today:2, tomorrow:3, forever:3, whatever:3, however:3, wonderful:3, fireplace:2, forest:2,
+  lovely:2, lonely:2, lately:2, likely:2, safely:2, surely:2, nicely:2, wisely:2, statement:2, movement:2, careful:2, useful:2, hopeful:2,
+  ocean:2, oceans:2, says:1, said:1, does:1, goes:1, shoes:1, clothes:1, toes:1, there:1, where:1, here:1, were:1, whose:1, come:1, some:1,
+  done:1, gone:1, one:1, once:1, give:1, live:1, love:1, move:1, prove:1, above:2, have:1, gives:1, lives:1, loves:1, little:2, gentle:2,
+  idle:2, able:2, table:2, thee:1, the:1, me:1, be:1, we:1, he:1, she:1, ye:1, eternal:3, possession:3, declines:2, untrimm:2, beyond:2, maybe:2, ideal:3, ideals:3, real:1, really:2, poetic:3, react:2, create:2
+};
 function syllablesInWord(word) {
-  let w = word.toLowerCase().replace(/[^a-z]/g, '');
+  let w = word.toLowerCase().replace(/’/g, "'").replace(/[^a-z']/g, '');
+  w = w.replace(/'s$/, '').replace(/'/g, '');
   if (!w) return 0;
+  if (SYL_EXCEPTIONS[w] != null) return SYL_EXCEPTIONS[w];
   if (w.length <= 3) return 1;
-  w = w.replace(/(?:[^laeiouy]es|[^laeiouy]e)$/, '');
-  w = w.replace(/^y/, '');
-  const m = w.match(/[aeiouy]{1,2}/g);
-  return m ? m.length : 1;
+  let base = w;
+  // endings that add no syllable
+  base = base.replace(/(?:[^aeiouy])ed$/, m => (/[td]ed$/.test(m) ? m : m[0] + 'd'));   // walked, rained (not wanted)
+  if (!/[^aeiouy]les$/.test(base)) base = base.replace(/([^aeiouyscxzhg])es$/, '$1s');                                   // makes, lines (not wishes, horses)
+  base = base.replace(/([^aeiouy])ely$/, '$1ly');                                        // lovely, lonely
+  base = base.replace(/([^aeiouy])e(ment|ful|less|ness)$/, '$1$2');                     // statement, careful
+  if (/[^aeiouy]le$/.test(base)) { /* table, little: final -le is a syllable */ }
+  else base = base.replace(/([^aeiouy])e$/, '$1');                                       // silent final e
+  base = base.replace(/^y/, '');
+  let n = (base.match(/[aeiouy]+/g) || []).length;
+  // vowel pairs that are two syllables
+  n += (base.match(/(ia|io(?!u)|eo|ua|uo|iu|ue(?=[a-z])|ie(?=t|r))/g) || []).length;
+  // exceptions to those pairs inside common endings
+  n -= (base.match(/(tion|sion|xion|cial|tial|cious|tious|gion|geous|ious$)/g) || []).length;
+  return Math.max(1, n);
 }
 function syllablesInLine(line) {
-  return (line.match(/[A-Za-z']+/g) || []).reduce((n, w) => n + syllablesInWord(w), 0);
+  return (line.match(/[A-Za-z'’]+/g) || []).reduce((n, w) => n + syllablesInWord(w), 0);
 }
 function liveCount(inputId) {
   const el = document.getElementById(inputId);

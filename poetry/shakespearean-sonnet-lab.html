@@ -353,6 +353,15 @@
   .match-row select { min-height: 44px; font: inherit; font-size: 0.95em; padding: 6px 10px; border-radius: 12px; border: 1.5px solid var(--rule-strong); background: #fff; color: var(--ink); max-width: 100%; }
   .quill { width: 110px; flex: 0 0 110px; height: auto; }
   @media (max-width: 560px) { .compare { grid-template-columns: 1fr; } .quill { width: 72px; flex-basis: 72px; } }
+  .listen-thumb { display: block; border-radius: 18px; overflow: hidden; margin: 6px 0 4px; box-shadow: 0 6px 16px rgba(42,34,56,0.18); -webkit-tap-highlight-color: transparent; }
+  .listen-thumb svg { display: block; width: 100%; height: auto; }
+  .listen-thumb:hover { box-shadow: 0 8px 22px rgba(42,34,56,0.28); }
+  .listen-thumb:focus-visible { outline: 3px solid var(--lapis); outline-offset: 3px; }
+  .wb-inputs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 4px; }
+  .wb-inputs input { margin: 0; }
+  .wb-row { padding: 10px 0; border-bottom: 1px solid var(--rule); }
+  .wb-row:last-child { border-bottom: none; }
+  @media (max-width: 560px) { .wb-inputs { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -440,27 +449,33 @@
         <p style="margin:0;">Example: Sonnet 18, William Shakespeare</p>
       </div>
     </div>
+    <div class="card">
+      <p class="eyebrow">Warm up</p>
+      <h3>Summer word bank</h3>
+      <p>Sonnet 18 is all about summer. Before you read it, write <strong>three words</strong> you connect with summer. Then check which ones Shakespeare uses too.</p>
+      <div class="wb-inputs">
+        <input type="text" id="wb1" placeholder="Word 1" aria-label="Summer word 1">
+        <input type="text" id="wb2" placeholder="Word 2" aria-label="Summer word 2">
+        <input type="text" id="wb3" placeholder="Word 3" aria-label="Summer word 3">
+      </div>
+      <button class="btn" onclick="checkWordBank()">Check with Shakespeare</button>
+      <div id="wb-fb" aria-live="polite"></div>
+    </div>
     <div class="task">
       <p class="eyebrow">Your task</p>
-      <h3>Compare the endings</h3>
-      <p><strong>Read both endings aloud, then answer:</strong> Which ending sounds more like a final punch? Which one rhymes as a pair, two lines in a row? How does that change the way the poem finishes?</p>
-    </div>
-    <div class="card">
-      <span class="badge badge-sonnet">Petrarchan</span>
-      <h3>Sonnet 43: the last two lines</h3>
-      <div class="poem">
-        Smiles, tears, of all my life; and, if God choose,<br>
-        I shall but love thee better after death.
-      </div>
+      <h3>A first taste</h3>
+      <p><strong>Read the first four lines of Sonnet 18 aloud, then answer:</strong> What two things is the poet comparing? Which one does he say is better? Can you already hear the da-DUM beat you know from Sonnet 43?</p>
     </div>
     <div class="card">
       <span class="badge badge-sonnet">Shakespearean</span>
-      <h3>Sonnet 18: the last two lines</h3>
+      <h3>Sonnet 18 (William Shakespeare): the first four lines</h3>
       <div class="poem">
-        So long as men can breathe or eyes can see,<br>
-        So long lives this, and this gives life to thee.
+        Shall I compare thee to a summer’s day?<br>
+        Thou art more lovely and more temperate:<br>
+        Rough winds do shake the darling buds of May,<br>
+        And summer’s lease hath all too short a date;
       </div>
-      <p style="font-size:0.9em; color:var(--muted); margin-top:8px;"><em>thee</em> = you &nbsp;•&nbsp; <em>this</em> = this poem</p>
+      <p style="font-size:0.9em; color:var(--muted); margin-top:8px;"><em>thee</em> = you &nbsp;•&nbsp; <em>thou art</em> = you are &nbsp;•&nbsp; <em>temperate</em> = mild and calm &nbsp;•&nbsp; <em>hath</em> = has</p>
     </div>
     <div class="step-nav"><span class="spacer"></span><button type="button" class="nav-btn next" onclick="goTab('form')">Next: The Form →</button></div>
   </section>
@@ -493,6 +508,25 @@
       </div>
     </div>
 
+    <div class="card">
+      <p class="eyebrow">Listen first</p>
+      <h3>Sir Ian McKellen reads Sonnet 18</h3>
+      <p>Listen once with your eyes closed. Then listen again and follow the text below. Notice where his voice pauses, and how the last two lines sound like an ending.</p>
+      <a class="listen-thumb" href="https://poetryarchive.org/poem/shall-i-compare-thee-to-a-summers-day-sonnet-18/" target="_blank" rel="noopener" aria-label="Listen to Sir Ian McKellen read Sonnet 18 on the Poetry Archive (opens in a new tab)">
+        <svg viewBox="0 0 640 300" role="img" aria-hidden="true" focusable="false">
+          <rect width="640" height="300" rx="22" fill="#2a2238"/>
+          <rect x="14" y="14" width="612" height="272" rx="14" fill="none" stroke="#625a70" stroke-width="1.5"/>
+          <rect x="150" y="141" width="8" height="18" rx="4" fill="#e7b440" opacity="0.9"/><rect x="164" y="133" width="8" height="34" rx="4" fill="#e7b440" opacity="0.55"/><rect x="178" y="124" width="8" height="52" rx="4" fill="#e7b440" opacity="0.55"/><rect x="192" y="136" width="8" height="28" rx="4" fill="#e7b440" opacity="0.9"/><rect x="206" y="118" width="8" height="64" rx="4" fill="#e7b440" opacity="0.55"/><rect x="220" y="130" width="8" height="40" rx="4" fill="#e7b440" opacity="0.55"/><rect x="234" y="139" width="8" height="22" rx="4" fill="#e7b440" opacity="0.9"/><rect x="248" y="121" width="8" height="58" rx="4" fill="#e7b440" opacity="0.55"/><rect x="262" y="128" width="8" height="44" rx="4" fill="#e7b440" opacity="0.55"/><rect x="276" y="135" width="8" height="30" rx="4" fill="#e7b440" opacity="0.9"/><rect x="290" y="115" width="8" height="70" rx="4" fill="#e7b440" opacity="0.55"/><rect x="304" y="132" width="8" height="36" rx="4" fill="#e7b440" opacity="0.55"/><rect x="318" y="140" width="8" height="20" rx="4" fill="#e7b440" opacity="0.9"/><rect x="332" y="126" width="8" height="48" rx="4" fill="#e7b440" opacity="0.55"/><rect x="346" y="119" width="8" height="62" rx="4" fill="#e7b440" opacity="0.55"/><rect x="360" y="137" width="8" height="26" rx="4" fill="#e7b440" opacity="0.9"/><rect x="374" y="130" width="8" height="40" rx="4" fill="#e7b440" opacity="0.55"/><rect x="388" y="123" width="8" height="54" rx="4" fill="#e7b440" opacity="0.55"/><rect x="402" y="138" width="8" height="24" rx="4" fill="#e7b440" opacity="0.9"/><rect x="416" y="134" width="8" height="32" rx="4" fill="#e7b440" opacity="0.55"/>
+          <circle cx="90" cy="150" r="46" fill="#b94c2a"/>
+          <path d="M78,124 L112,150 L78,176 Z" fill="#fffdf8"/>
+          <text x="40" y="58" fill="#e7b440" font-family="Nunito, Helvetica, Arial, sans-serif" font-size="24" font-weight="800" letter-spacing="3">LISTEN · ABOUT 1 MINUTE</text>
+          <text x="40" y="238" fill="#fffdf8" font-family="Fraunces, Georgia, serif" font-size="40" font-weight="700">Sonnet 18</text>
+          <text x="40" y="272" fill="#d9d2e3" font-family="Nunito, Helvetica, Arial, sans-serif" font-size="24">read by Sir Ian McKellen</text>
+        </svg>
+      </a>
+      <p style="font-size:0.9em; color:var(--muted); margin:10px 0 0;">Opens in a new tab. The Poetry Archive is a UK charity that records poets and actors reading poems. About 1 minute.</p>
+    </div>
+
     <h3>Sonnet 18 – Full Text with Rhyme Colors</h3>
     <p class="line-count">Tap the <span style="border-bottom:2px dotted var(--lapis);">dotted words</span> to see what they mean.</p>
     <div class="sonnet">
@@ -521,6 +555,22 @@
     </div>
     <div class="note">
       <strong>Two turns, not one.</strong> At <strong>line 9</strong> the poem turns with <em>But</em>: summer fades, <em>but</em> you won’t. Then the <strong>couplet</strong> gives the final answer: <em>how</em> you will last. The poem itself will keep you alive. In a Shakespearean sonnet, the couplet is the last word.
+    </div>
+
+    <div class="task">
+      <p class="eyebrow">Your task</p>
+      <h3>Compare the endings</h3>
+      <p>Now that you know both poems, read their last two lines aloud. <strong>Which ending sounds more like a final punch? Which one rhymes as a pair, two lines in a row? How does that change the way the poem finishes?</strong></p>
+    </div>
+    <div class="compare">
+      <div class="blk">
+        <span class="badge badge-sonnet">Petrarchan · Sonnet 43</span>
+        <div class="poem" style="margin-top:8px;">Smiles, tears, of all my life; and, if God choose,<br>I shall but love thee better after death.</div>
+      </div>
+      <div class="blk" style="background:var(--terracotta-soft); border-color:#efc4b3;">
+        <span class="badge badge-sonnet">Shakespearean · Sonnet 18</span>
+        <div class="poem" style="margin-top:8px;">So long as men can breathe or eyes can see,<br>So long lives this, and this gives life to thee.</div>
+      </div>
     </div>
 
     <div class="card">
@@ -688,17 +738,42 @@ function updatePlanView() {
 }
 
 /* ---------- Syllable estimate (approximate) ---------- */
+const SYL_EXCEPTIONS = {
+  eye:1, eyes:1, poem:2, poems:2, poet:2, poets:2, poetry:3, truest:2, every:2, evening:2, evenings:2, beautiful:3, quiet:2, quietly:3,
+  being:2, area:3, idea:3, ideas:3, people:2, fire:1, fires:1, hour:1, hours:1, our:1, ours:1, flower:2, flowers:2, power:2, powers:2,
+  heaven:2, heavens:2, lion:2, science:2, create:2, created:3, video:3, radio:3, piano:3, cruel:2, fuel:2, jewel:2, diet:2, quite:1,
+  business:2, different:3, family:3, chocolate:3, interesting:3, favourite:3, favorite:3, camera:3, natural:3, several:3, general:3,
+  temperate:3, everything:3, everyone:3, everybody:4, sometime:2, sometimes:2, someone:2, something:2, somewhere:2, nowhere:2, anywhere:3,
+  homework:2, tonight:2, today:2, tomorrow:3, forever:3, whatever:3, however:3, wonderful:3, fireplace:2, forest:2,
+  lovely:2, lonely:2, lately:2, likely:2, safely:2, surely:2, nicely:2, wisely:2, statement:2, movement:2, careful:2, useful:2, hopeful:2,
+  ocean:2, oceans:2, says:1, said:1, does:1, goes:1, shoes:1, clothes:1, toes:1, there:1, where:1, here:1, were:1, whose:1, come:1, some:1,
+  done:1, gone:1, one:1, once:1, give:1, live:1, love:1, move:1, prove:1, above:2, have:1, gives:1, lives:1, loves:1, little:2, gentle:2,
+  idle:2, able:2, table:2, thee:1, the:1, me:1, be:1, we:1, he:1, she:1, ye:1, eternal:3, possession:3, declines:2, untrimm:2, beyond:2, maybe:2, ideal:3, ideals:3, real:1, really:2, poetic:3, react:2, create:2
+};
 function syllablesInWord(word) {
-  let w = word.toLowerCase().replace(/[^a-z]/g, '');
+  let w = word.toLowerCase().replace(/’/g, "'").replace(/[^a-z']/g, '');
+  w = w.replace(/'s$/, '').replace(/'/g, '');
   if (!w) return 0;
+  if (SYL_EXCEPTIONS[w] != null) return SYL_EXCEPTIONS[w];
   if (w.length <= 3) return 1;
-  w = w.replace(/(?:[^laeiouy]es|[^laeiouy]e)$/, '');
-  w = w.replace(/^y/, '');
-  const m = w.match(/[aeiouy]{1,2}/g);
-  return m ? m.length : 1;
+  let base = w;
+  // endings that add no syllable
+  base = base.replace(/(?:[^aeiouy])ed$/, m => (/[td]ed$/.test(m) ? m : m[0] + 'd'));   // walked, rained (not wanted)
+  if (!/[^aeiouy]les$/.test(base)) base = base.replace(/([^aeiouyscxzhg])es$/, '$1s');                                   // makes, lines (not wishes, horses)
+  base = base.replace(/([^aeiouy])ely$/, '$1ly');                                        // lovely, lonely
+  base = base.replace(/([^aeiouy])e(ment|ful|less|ness)$/, '$1$2');                     // statement, careful
+  if (/[^aeiouy]le$/.test(base)) { /* table, little: final -le is a syllable */ }
+  else base = base.replace(/([^aeiouy])e$/, '$1');                                       // silent final e
+  base = base.replace(/^y/, '');
+  let n = (base.match(/[aeiouy]+/g) || []).length;
+  // vowel pairs that are two syllables
+  n += (base.match(/(ia|io(?!u)|eo|ua|uo|iu|ue(?=[a-z])|ie(?=t|r))/g) || []).length;
+  // exceptions to those pairs inside common endings
+  n -= (base.match(/(tion|sion|xion|cial|tial|cious|tious|gion|geous|ious$)/g) || []).length;
+  return Math.max(1, n);
 }
 function syllablesInLine(line) {
-  return (line.match(/[A-Za-z']+/g) || []).reduce((n, w) => n + syllablesInWord(w), 0);
+  return (line.match(/[A-Za-z'’]+/g) || []).reduce((n, w) => n + syllablesInWord(w), 0);
 }
 function liveCount(inputId) {
   const el = document.getElementById(inputId);
@@ -933,6 +1008,37 @@ Finish the full sonnet: A B A B · C D C D · E F E F · G G. Turn at line 9; th
   } else {
     fallback();
   }
+}
+
+/* ---------- Step 1: Summer word bank ---------- */
+const summerWords = [
+  { keys: ['summer','summers','summertime'], quote: 'Shall I compare thee to a summer’s day?', line: 1 },
+  { keys: ['day','days','daytime'], quote: 'Shall I compare thee to a summer’s day?', line: 1 },
+  { keys: ['wind','winds','windy','breeze','breezes','storm','storms','stormy'], quote: 'Rough winds do shake the darling buds of May', line: 3 },
+  { keys: ['bud','buds','flower','flowers','blossom','blossoms','bloom','blooms','rose','roses','garden','gardens'], quote: 'Rough winds do shake the darling buds of May', line: 3 },
+  { keys: ['may'], quote: 'Rough winds do shake the darling buds of May', line: 3 },
+  { keys: ['hot','heat','warm','warmth','heatwave','sweat','sweaty'], quote: 'Sometime too hot the eye of heaven shines', line: 5 },
+  { keys: ['sun','sunny','sunshine','sunlight','shine','shines','shining','bright','light'], quote: 'Sometime too hot the eye of heaven shines', line: 5, note: '“The eye of heaven” is his name for the sun.' },
+  { keys: ['gold','golden','yellow','tan'], quote: 'And often is his gold complexion dimm’d', line: 6 },
+  { keys: ['cloud','clouds','cloudy','rain','grey','gray'], quote: 'And often is his gold complexion dimm’d', line: 6, note: 'Clouds hide the sun’s golden face.' },
+  { keys: ['short','end','ending','over','holiday','holidays','vacation','break'], quote: 'And summer’s lease hath all too short a date', line: 4 },
+  { keys: ['shade','shadow','shadows'], quote: 'Nor shall Death brag thou wander’st in his shade', line: 11 },
+  { keys: ['beautiful','beauty','lovely','pretty','fair'], quote: 'Thou art more lovely and more temperate', line: 2 }
+];
+function checkWordBank() {
+  const out = document.getElementById('wb-fb');
+  const words = ['wb1','wb2','wb3'].map(id => document.getElementById(id).value.trim()).filter(Boolean);
+  if (!words.length) { out.innerHTML = '<p class="fb try" style="display:block;">Write at least one summer word first.</p>'; return; }
+  let found = 0;
+  const rows = words.map(w => {
+    const k = w.toLowerCase().replace(/[^a-z]/g, '');
+    const hit = summerWords.find(s => s.keys.includes(k));
+    const safe = w.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    if (hit) { found++; return '<div class="wb-row"><strong style="color:#1e8449;">✓ ' + safe + '</strong>: Shakespeare has this idea in line ' + hit.line + ': <em>“' + hit.quote + '”</em>' + (hit.note ? ' ' + hit.note : '') + '</div>'; }
+    return '<div class="wb-row"><strong>' + safe + '</strong>: not in Sonnet 18, but a great summer word. You could use it in your own sonnet.</div>';
+  });
+  out.innerHTML = '<div class="card" style="margin-top:14px;">' + rows.join('') +
+    '<p style="margin:12px 0 0;"><strong>' + found + ' of your ' + words.length + '</strong> ideas are in the poem. Notice: Shakespeare’s summer is not all good. It has rough winds, too much heat, clouds, and it ends too soon. Keep that in mind as you read.</p></div>';
 }
 
 buildMatch();
