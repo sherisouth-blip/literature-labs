@@ -362,6 +362,19 @@
   .wb-row { padding: 10px 0; border-bottom: 1px solid var(--rule); }
   .wb-row:last-child { border-bottom: none; }
   @media (max-width: 560px) { .wb-inputs { grid-template-columns: 1fr; } }
+  .lbl { border-bottom: 1px solid var(--rule); }
+  .lbl summary { list-style: none; cursor: pointer; display: flex; gap: 10px; align-items: baseline; padding: 10px 2px; min-height: 44px; -webkit-tap-highlight-color: transparent; }
+  .lbl summary::-webkit-details-marker { display: none; }
+  .lbl summary .num { flex: 0 0 24px; color: var(--muted); font-size: 0.85em; text-align: right; }
+  .lbl summary .lbl-line { flex: 1; font-family: 'Fraunces', Georgia, serif; font-style: italic; }
+  .lbl summary::after { content: "What does it mean? ▾"; flex: 0 0 auto; font-size: 0.78em; font-weight: 700; color: var(--lapis); white-space: nowrap; }
+  .lbl[open] summary::after { content: "Hide ▴"; }
+  .lbl p { margin: 0 0 12px 34px; padding: 10px 14px; background: var(--lapis-soft); border-radius: 12px; }
+  .lbl-check { margin: 12px 0 22px; padding: 14px 16px; background: var(--gold-soft); border: 1px solid #f1d98a; border-radius: 14px; }
+  .lbl-check textarea { min-height: 70px; margin: 8px 0; }
+  .lbl-ans summary { cursor: pointer; font-weight: 700; color: var(--lapis); min-height: 44px; display: flex; align-items: center; }
+  .lbl-ans p { margin: 4px 0 0; }
+  @media (max-width: 560px) { .lbl summary { flex-wrap: wrap; } .lbl summary::after { flex-basis: 100%; padding-left: 34px; } .lbl p { margin-left: 0; } }
 </style>
 </head>
 <body>
@@ -398,7 +411,7 @@
     <p class="eyebrow">Shakespearean Sonnet Workshop</p>
     <h1>Poetry Lab</h1>
     <p class="subtitle">Inspired by William Shakespeare’s <span style="white-space:nowrap">Sonnet 18</span></p>
-    <div class="chips"><span class="chip">14 lines</span><span class="chip">4 + 4 + 4 + 2</span><span class="chip">a twist at the end</span></div>
+    <div class="chips"><span class="chip">14 lines</span><span class="chip">4 + 4 + 4 + 2</span><span class="chip">But… then So…</span></div>
   </header>
 
   <nav class="tabs-wrap" aria-label="Lesson steps">
@@ -445,7 +458,7 @@
         <span class="badge badge-sonnet">New today</span>
         <h3>Shakespearean (English)</h3>
         <p><strong>4 + 4 + 4 + 2</strong> lines: three quatrains, then a couplet.</p>
-        <p>The big twist comes at the <strong>end</strong>, in the last two lines.</p>
+        <p>The turn comes at <strong>line 9</strong> too (“But…”). Then the last two lines give the <strong>answer</strong> (“So…”).</p>
         <p style="margin:0;">Example: Sonnet 18, William Shakespeare</p>
       </div>
     </div>
@@ -498,12 +511,12 @@
       </div>
       <div class="blk">
         <h3>Quatrain 3</h3>
-        <p>Lines 9–12 · often turns (“But…”)</p>
+        <p>Lines 9–12 · the turn: “But…”</p>
         <span class="scheme" aria-label="Rhyme E F E F"><span class="e">E</span><span class="f">F</span><span class="e">E</span><span class="f">F</span></span>
       </div>
       <div class="blk couplet">
         <h3>Couplet</h3>
-        <p>Lines 13–14 · the final twist or answer</p>
+        <p>Lines 13–14 · the answer: “So…”</p>
         <span class="scheme" aria-label="Rhyme G G"><span class="g">G</span><span class="g">G</span></span>
       </div>
     </div>
@@ -527,6 +540,46 @@
       <p style="font-size:0.9em; color:var(--muted); margin:10px 0 0;">Opens in a new tab. The Poetry Archive is a UK charity that records poets and actors reading poems. About 1 minute.</p>
     </div>
 
+    <div class="card lbl-card">
+      <p class="eyebrow">Read it slowly</p>
+      <h3>Line by line: what does it mean?</h3>
+      <p>Read each line aloud. Try to say what it means in your own words. Then tap the line to check.</p>
+      <div class="part">Quatrain 1 · lines 1–4</div>
+      <details class="lbl"><summary><span class="num">1</span><span class="lbl-line">Shall I compare thee to a summer’s day?</span></summary><p>Should I say you are like a summer’s day?</p></details>
+      <details class="lbl"><summary><span class="num">2</span><span class="lbl-line">Thou art more lovely and more temperate:</span></summary><p>You are more beautiful than summer, and calmer too: never too hot, never too stormy.</p></details>
+      <details class="lbl"><summary><span class="num">3</span><span class="lbl-line">Rough winds do shake the darling buds of May,</span></summary><p>In early summer, strong winds shake the pretty little flower buds.</p></details>
+      <details class="lbl"><summary><span class="num">4</span><span class="lbl-line">And summer’s lease hath all too short a date;</span></summary><p>Summer is only borrowed for a short time, and it ends too soon.</p></details>
+      <div class="lbl-check"><strong>Check:</strong> What two things is the poet comparing? Which one wins?
+        <textarea aria-label="What two things is the poet comparing? Which one wins?" placeholder="My answer..."></textarea>
+        <details class="lbl-ans"><summary>Show a model answer</summary><p>A person and a summer’s day. The person wins: lovelier and calmer than summer.</p></details>
+      </div>
+      <div class="part">Quatrain 2 · lines 5–8</div>
+      <details class="lbl"><summary><span class="num">5</span><span class="lbl-line">Sometime too hot the eye of heaven shines,</span></summary><p>Sometimes the sun (“the eye of heaven”) is too hot.</p></details>
+      <details class="lbl"><summary><span class="num">6</span><span class="lbl-line">And often is his gold complexion dimm’d;</span></summary><p>And often clouds cover the sun’s golden face.</p></details>
+      <details class="lbl"><summary><span class="num">7</span><span class="lbl-line">And every fair from fair sometime declines,</span></summary><p>Every beautiful thing stops being beautiful one day.</p></details>
+      <details class="lbl"><summary><span class="num">8</span><span class="lbl-line">By chance or nature’s changing course untrimm’d;</span></summary><p>That happens by bad luck, or just because nature changes and things grow old.</p></details>
+      <div class="lbl-check"><strong>Check:</strong> Name two things that are wrong with summer.
+        <textarea aria-label="Name two things that are wrong with summer." placeholder="My answer..."></textarea>
+        <details class="lbl-ans"><summary>Show a model answer</summary><p>Any two: the sun is too hot; clouds hide the sun; summer ends too soon; every beautiful thing fades.</p></details>
+      </div>
+      <div class="part">Quatrain 3 · lines 9–12</div>
+      <details class="lbl"><summary><span class="num">9</span><span class="lbl-line">But thy eternal summer shall not fade,</span></summary><p>But your “summer”, your beauty, will never fade.</p></details>
+      <details class="lbl"><summary><span class="num">10</span><span class="lbl-line">Nor lose possession of that fair thou ow’st;</span></summary><p>You won’t lose the beauty you have.</p></details>
+      <details class="lbl"><summary><span class="num">11</span><span class="lbl-line">Nor shall Death brag thou wander’st in his shade,</span></summary><p>Death won’t be able to boast that you belong to him.</p></details>
+      <details class="lbl"><summary><span class="num">12</span><span class="lbl-line">When in eternal lines to time thou grow’st:</span></summary><p>Because you will live on in the lines of this poem, forever.</p></details>
+      <div class="lbl-check"><strong>Check:</strong> What is the big “But” in line 9?
+        <textarea aria-label="What is the big “But” in line 9?" placeholder="My answer..."></textarea>
+        <details class="lbl-ans"><summary>Show a model answer</summary><p>Summer fades, but your beauty won’t, because you will live in this poem.</p></details>
+      </div>
+      <div class="part">Couplet · lines 13–14</div>
+      <details class="lbl"><summary><span class="num">13</span><span class="lbl-line">So long as men can breathe or eyes can see,</span></summary><p>As long as people are alive and can read,</p></details>
+      <details class="lbl"><summary><span class="num">14</span><span class="lbl-line">So long lives this, and this gives life to thee.</span></summary><p>this poem will live, and it will keep you alive too.</p></details>
+      <div class="lbl-check"><strong>Check:</strong> What will keep the person alive?
+        <textarea aria-label="What will keep the person alive?" placeholder="My answer..."></textarea>
+        <details class="lbl-ans"><summary>Show a model answer</summary><p>This poem, for as long as people are alive to read it.</p></details>
+      </div>
+    </div>
+
     <h3>Sonnet 18 – Full Text with Rhyme Colors</h3>
     <p class="line-count">Tap the <span style="border-bottom:2px dotted var(--lapis);">dotted words</span> to see what they mean.</p>
     <div class="sonnet">
@@ -545,7 +598,7 @@
       <div class="ln"><span class="num">10</span><span class="txt">Nor lose possession of that fair <button type="button" class="gloss" data-word="thou ow’st" data-def="you own. Your beauty belongs to you and won’t be lost."><span class="rw f">thou ow’st</span></button>;</span><span class="rl f">F</span></div>
       <div class="ln"><span class="num">11</span><span class="txt">Nor shall Death brag thou wander’st in his <span class="rw e">shade</span>,</span><span class="rl e">E</span></div>
       <div class="ln"><span class="num">12</span><span class="txt">When in <button type="button" class="gloss" data-word="eternal lines" data-def="the lines of this poem, which will last forever."><span>eternal lines</span></button> to time thou <span class="rw f">grow’st</span>:</span><span class="rl f">F</span></div>
-      <div class="part volta">Couplet · the final answer</div>
+      <div class="part volta">Couplet · the answer (“So…”)</div>
       <div class="ln l13"><span class="num">13</span><span class="txt">So long as men can breathe or eyes can <span class="rw g">see</span>,</span><span class="rl g">G</span></div>
       <div class="ln l13"><span class="num">14</span><span class="txt">So long lives this, and this gives life to <span class="rw g">thee</span>.</span><span class="rl g">G</span></div>
     </div>
@@ -554,7 +607,12 @@
       <div id="glossPlain" style="display:none; margin-top:8px;"><strong>The whole poem in plain English:</strong> Should I compare you to a summer’s day? You are lovelier and calmer. Summer has storms, it is sometimes too hot or too cloudy, and it ends too soon. Every beautiful thing fades in the end. But your beauty will not fade, and death will not take you, because you will live in this poem. As long as people are alive to read it, this poem lives, and it keeps you alive too.</div>
     </div>
     <div class="note">
-      <strong>Two turns, not one.</strong> At <strong>line 9</strong> the poem turns with <em>But</em>: summer fades, <em>but</em> you won’t. Then the <strong>couplet</strong> gives the final answer: <em>how</em> you will last. The poem itself will keep you alive. In a Shakespearean sonnet, the couplet is the last word.
+      <strong>The turn and the couplet do two different jobs.</strong>
+      <ul style="margin:8px 0 8px 0;">
+        <li><strong>The turn (line 9) says “But…”</strong>: it changes direction. Summer fades, <em>but</em> you won’t.</li>
+        <li><strong>The couplet (lines 13–14) says “So…”</strong>: it gives the answer, how or why. <em>So</em> as long as people read this poem, you stay alive.</li>
+      </ul>
+      Think of a road: you walk straight for 8 lines, <strong>turn the corner</strong> at line 9, and <strong>arrive</strong> at lines 13–14. The turn is the corner. The couplet is where you arrive.
     </div>
 
     <div class="task">
@@ -640,7 +698,7 @@
   <!-- ================= 4. IDEAS ================= -->
   <section id="ideas" class="tab-content">
     <p class="eyebrow">Step 4 · Idea Spark</p>
-    <h2>Three Pictures and a Twist</h2>
+    <h2>Two Pictures, a Turn and an Answer</h2>
     <p class="lead">Start with meaning, not rhyme. Pick one thing you care about.</p>
 
     <div class="note">
@@ -648,8 +706,8 @@
       <ul style="margin:8px 0 8px 0;">
         <li><strong>Quatrain 1:</strong> you are lovelier than a summer’s day.</li>
         <li><strong>Quatrain 2:</strong> summer has faults: too hot, too cloudy, and it always fades.</li>
-        <li><strong>Quatrain 3:</strong> <em>but</em> your beauty will never fade.</li>
-        <li><strong>Couplet:</strong> because this poem will keep you alive.</li>
+        <li><strong>Quatrain 3, the turn (“But…”):</strong> <em>but</em> your beauty will never fade.</li>
+        <li><strong>Couplet, the answer (“So…”):</strong> so as long as people read this poem, you stay alive.</li>
       </ul>
       Each quatrain moves the argument one step. The couplet lands it.
     </div>
@@ -668,7 +726,7 @@
       <div class="note" style="margin-top:0; background:var(--terracotta-soft); border-color:#efc4b3;">
         <strong>Poet’s tip:</strong> many poets write the <strong>couplet first</strong>. If you know where the poem ends, the three quatrains can walk towards it.
       </div>
-      <label for="planCouplet"><strong>Couplet (lines 13–14):</strong> What is your final point, answer or surprise?</label>
+      <label for="planCouplet"><strong>Couplet (lines 13–14), the “So…”:</strong> What is your final answer? Where does your poem arrive?</label>
       <textarea id="planCouplet" placeholder="e.g. Even when I leave, the sea stays in me..."></textarea>
       <label for="planQ1"><strong>Quatrain 1 (lines 1–4):</strong> Your first picture.</label>
       <textarea id="planQ1" placeholder="e.g. The sea in summer: bright, loud, full of people..."></textarea>
@@ -832,7 +890,7 @@ function checkMatch() {
     fb.textContent = '✓ All four. Three quatrains build the argument, and the couplet lands it.';
   } else {
     fb.className = 'fb try';
-    fb.textContent = right + ' of 4 correct' + (answered < 4 ? ' (some not answered yet)' : '') + '. Hint: the turn starts with “But”, and the answer comes last.';
+    fb.textContent = right + ' of 4 correct' + (answered < 4 ? ' (some not answered yet)' : '') + '. Hint: the turn says “But…”, and the couplet gives the answer (“So…”).';
   }
 }
 
