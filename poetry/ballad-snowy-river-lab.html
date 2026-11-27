@@ -1006,7 +1006,7 @@ function buildCrossword() {
     inp.setAttribute('aria-label', 'Row ' + (r + 1) + ', column ' + (c + 1));
     cell.appendChild(inp); grid.appendChild(cell);
     xwCells[k] = { r, c, ans: ans[k], el: cell, inp };
-    inp.addEventListener('mousedown', e => { if (xwCur && xwCur.r === r && xwCur.c === c) { e.preventDefault(); xwToggle(); } });
+    inp.addEventListener('mousedown', e => { if (document.activeElement === inp && xwCur && xwCur.r === r && xwCur.c === c) { e.preventDefault(); xwToggle(); } });
     inp.addEventListener('focus', () => xwSelect(r, c));
     // A new letter replaces the old one: no need to delete first.
     inp.addEventListener('focus', () => inp.select());
