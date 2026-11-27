@@ -239,6 +239,8 @@
   .gloss { font: inherit; font-style: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; border-bottom: 2px dotted var(--lapis); -webkit-appearance: none; appearance: none; }
   .gloss.seen { background: var(--gold-soft); border-radius: 4px; }
   .gloss-box { background: var(--card); border: 2px solid var(--gold); border-radius: 14px; padding: 14px 18px; margin: 0 0 18px; }
+  .sonnet .gloss-box { margin: 6px 0 10px 46px; font-family: 'Nunito', sans-serif; font-style: normal; font-size: 0.92em; background: var(--gold-soft); }
+  @media (max-width: 560px) { .sonnet .gloss-box { margin-left: 32px; } }
 
   /* ---------- Intro ---------- */
   .intro-row { display: flex; align-items: center; gap: 24px; }
@@ -333,6 +335,26 @@
     .part { margin-left: 32px; }
     .sonnet { padding-right: 10px; }
   }
+  /* ---------- Printable worksheet ---------- */
+  #printSheet { display: none; }
+  @media print {
+    @page { margin: 18mm 16mm; }
+    body { background: #fff; padding: 0; font-size: 12pt; }
+    body > .container { display: none !important; }
+    #printSheet { display: block; color: #2a2238; }
+    #printSheet * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  .ps-head { border-bottom: 2px solid #b94c2a; padding-bottom: 10px; margin-bottom: 18px; }
+  .ps-eyebrow { font-weight: 800; font-size: 9pt; letter-spacing: 0.14em; text-transform: uppercase; color: #b94c2a; margin: 0 0 4px; }
+  .ps-head h1 { font-family: 'Fraunces', Georgia, serif; font-size: 26pt; margin: 0 0 4px; color: #2a2238; }
+  .ps-meta { color: #625a70; margin: 0; font-size: 11pt; }
+  .ps-sec { margin: 0 0 16px; page-break-inside: avoid; break-inside: avoid; }
+  .ps-sec h2 { font-family: 'Fraunces', Georgia, serif; font-size: 14pt; margin: 0 0 6px; color: #2c5a8a; border-bottom: 1px solid #e7dbc3; padding-bottom: 3px; }
+  .ps-row { margin: 0 0 6px; }
+  .ps-label { font-weight: 800; }
+  .ps-empty { color: #8a8195; font-style: italic; }
+  .ps-poem { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 13pt; line-height: 1.8; background: #fbf5e8; border: 1px solid #e7dbc3; border-radius: 8px; padding: 10px 14px; }
+  .ps-foot { margin-top: 20px; padding-top: 8px; border-top: 1px solid #e7dbc3; color: #625a70; font-size: 10pt; }
 </style>
 </head>
 <body>
@@ -652,7 +674,8 @@
     <textarea id="draftBox" placeholder="Write your first four lines here..." style="min-height:150px; font-family:'Fraunces', Georgia, serif; font-size:1.08em; line-height:1.7;"></textarea>
     <div class="line-count" id="lineInfo">0 lines • approx. 0 syllables</div>
     <button class="btn" onclick="analyzeDraft()">Check Lines</button>
-    <button class="btn btn-export" onclick="exportWork()">Export My Work</button>
+    <button class="btn btn-export" onclick="exportWork()">Copy for Google Doc</button>
+    <button class="btn" onclick="savePDF()">Save as PDF</button>
     <div id="exportStatus" class="export-status">Copied to clipboard! Paste it into your Google Doc.</div>
     <div id="analysis" style="margin-top:15px;"></div>
     <div class="task" style="margin-top:22px;">
@@ -664,6 +687,8 @@
 
   <p class="footer">Poetry Lab</p>
 </div>
+
+<div id="printSheet" aria-hidden="true"></div>
 
 <script>
 function showTab(id, btn) {
@@ -814,6 +839,9 @@ function checkEchoWord() {
 const glossSeen = new Set();
 document.querySelectorAll('.gloss').forEach(b => {
   b.addEventListener('click', () => {
+    const gbox = document.getElementById('glossBox');
+    const line = b.closest('.ln');
+    if (line) line.insertAdjacentElement('afterend', gbox);
     document.getElementById('glossText').innerHTML = '<strong>' + b.dataset.word + '</strong> = ' + b.dataset.def;
     b.classList.add('seen');
     glossSeen.add(b.dataset.word);
@@ -888,38 +916,62 @@ function analyzeDraft() {
 
 /* ---------- Export ---------- */
 function val(id, empty) { return document.getElementById(id).value.trim() || empty; }
+function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function collectWork() {
+  const raw = id => document.getElementById(id).value.trim();
+  return {
+    date: new Date().toLocaleDateString('en-CA'),
+    sections: [
+      { title: 'Meter Practice', rows: [
+        ['Fixed line a)', raw('fixA')], ['Fixed line b)', raw('fixB')],
+        ['My own line', raw('ownLine')], ['Strong beats marked', raw('ownLineMarked')] ] },
+      { title: 'My Topic', rows: [['', raw('topic')]] },
+      { title: 'It IS like…', rows: [['', raw('isList')]] },
+      { title: 'It is NOT like…', rows: [['', raw('isntList')]] },
+      { title: 'My Plan', rows: [
+        ['Quatrain 1 (lines 1–4)', raw('planQ1')], ['Quatrain 2 (lines 5–8)', raw('planQ2')],
+        ['The turn (line 9)', raw('planTurn')] ] },
+      { title: 'My Draft', poem: raw('draftBox') }
+    ]
+  };
+}
+function buildSheetHTML(w) {
+  const empty = '<span class="ps-empty" style="color:#8a8195;font-style:italic;">(not filled in yet)</span>';
+  const body = t => t ? esc(t).replace(/\n/g, '<br>') : empty;
+  let h = '<div class="ps-head"><p class="ps-eyebrow" style="color:#b94c2a;font-weight:bold;">PETRARCHAN SONNET WORKSHOP</p>' +
+    '<h1>Poetry Lab – Petrarchan Sonnet</h1>' +
+    '<p class="ps-meta">Name: ____________________ · Date: ' + w.date + ' · Inspired by Elizabeth Barrett Browning’s Sonnet 43</p></div>';
+  w.sections.forEach(sec => {
+    h += '<div class="ps-sec"><h2>' + sec.title + '</h2>';
+    if ('poem' in sec) {
+      h += sec.poem ? '<div class="ps-poem" style="font-style:italic;">' + body(sec.poem) + '</div>' : '<p>' + empty + '</p>';
+    } else {
+      sec.rows.forEach(([label, v]) => {
+        h += '<p class="ps-row">' + (label ? '<strong class="ps-label">' + label + ':</strong> ' : '') + body(v) + '</p>';
+      });
+    }
+    h += '</div>';
+  });
+  h += '<p class="ps-foot"><strong>Take-home:</strong> Finish the full 14-line Petrarchan sonnet. Remember the volta (turn) at line 9.</p>';
+  return h;
+}
+function buildSheetText(w) {
+  let t = 'Poetry Lab – Petrarchan Sonnet\nName: ________________\nDate: ' + w.date + '\nLesson: Petrarchan Sonnet (Elizabeth Barrett Browning)\n';
+  w.sections.forEach(sec => {
+    t += '\n' + sec.title.toUpperCase() + '\n';
+    if ('poem' in sec) t += (sec.poem || '(no draft yet)') + '\n';
+    else sec.rows.forEach(([label, v]) => { t += (label ? label + ': ' : '') + (v || '(not filled in yet)') + '\n'; });
+  });
+  return t + '\n---\nRemember the volta (turn) at line 9 when you finish the full sonnet.';
+}
+function savePDF() {
+  document.getElementById('printSheet').innerHTML = buildSheetHTML(collectWork());
+  window.print();
+}
 function exportWork() {
-  const e = '(not filled in yet)';
-  const today = new Date().toLocaleDateString('en-CA');
-  const exportText = `Poetry Lab – Petrarchan Sonnet
-Date: ${today}
-Lesson: Petrarchan Sonnet (Elizabeth Barrett Browning)
-
-METER PRACTICE
-Fixed line a): ${val('fixA', e)}
-Fixed line b): ${val('fixB', e)}
-My own line: ${val('ownLine', e)}
-Strong beats marked: ${val('ownLineMarked', e)}
-
-TOPIC
-${val('topic', e)}
-
-IT IS LIKE…
-${val('isList', e)}
-
-IT IS NOT LIKE…
-${val('isntList', e)}
-
-PLAN
-Quatrain 1: ${val('planQ1', e)}
-Quatrain 2: ${val('planQ2', e)}
-The turn (line 9): ${val('planTurn', e)}
-
-DRAFT
-${val('draftBox', '(no draft yet)')}
-
----
-Remember the volta (turn) at line 9 when you finish the full sonnet.`;
+  const w = collectWork();
+  const exportText = buildSheetText(w);
+  const exportHTML = '<div style="font-family:Georgia,serif;">' + buildSheetHTML(w) + '</div>';
 
   const ok = () => {
     const status = document.getElementById('exportStatus');
@@ -927,23 +979,30 @@ Remember the volta (turn) at line 9 when you finish the full sonnet.`;
     setTimeout(() => { status.style.display = 'none'; }, 4000);
   };
   const fallback = () => {
-    const ta = document.createElement('textarea');
-    ta.value = exportText;
-    ta.setAttribute('readonly', '');
-    ta.style.cssText = 'position:fixed; top:0; left:0; opacity:0;';
-    document.body.appendChild(ta);
-    ta.select();
-    ta.setSelectionRange(0, exportText.length);
+    // Rich copy by selecting a hidden formatted block
+    const div = document.createElement('div');
+    div.innerHTML = exportHTML;
+    div.style.cssText = 'position:fixed; top:0; left:-9999px; background:#fff;';
+    document.body.appendChild(div);
+    const range = document.createRange();
+    range.selectNodeContents(div);
+    const sel = window.getSelection();
+    sel.removeAllRanges(); sel.addRange(range);
     let copied = false;
     try { copied = document.execCommand('copy'); } catch (err) {}
-    document.body.removeChild(ta);
+    sel.removeAllRanges();
+    document.body.removeChild(div);
     if (copied) { ok(); return; }
     const box = document.getElementById('analysis');
     box.innerHTML = '<div class="card"><strong>Copy this text into your Google Doc:</strong><textarea style="min-height:260px;">' +
-      exportText.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</textarea></div>';
+      esc(exportText) + '</textarea></div>';
   };
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(exportText).then(ok).catch(fallback);
+  if (navigator.clipboard && window.isSecureContext && window.ClipboardItem) {
+    const item = new ClipboardItem({
+      'text/html': new Blob([exportHTML], { type: 'text/html' }),
+      'text/plain': new Blob([exportText], { type: 'text/plain' })
+    });
+    navigator.clipboard.write([item]).then(ok).catch(fallback);
   } else {
     fallback();
   }
