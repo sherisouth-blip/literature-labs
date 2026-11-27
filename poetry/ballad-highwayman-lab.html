@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poetry Lab: The Ballad – The Highwayman</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,500&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f7f1e3;
+    --card: #fffdf8;
+    --tint: #fbf5e8;
+    --ink: #2a2238;
+    --muted: #625a70;
+    --rule: #e7dbc3;
+    --rule-strong: #d6c49f;
+    --terracotta: #b94c2a;
+    --terracotta-soft: #f8e4da;
+    --lapis: #2c5a8a;
+    --lapis-soft: #e9f0f8;
+    --night: #1f2a44;
+    --gold: #e7b440;
+    --gold-soft: #fff1c9;
+    --success: #2a7d4b;
+    --rh-a: #b94c2a;
+    --rh-b: #3d7a2a;
+    --rh-c: #2c5a8a;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: 'Nunito', 'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    background: var(--paper); color: var(--ink);
+    margin: 0; padding: 24px 20px 40px; line-height: 1.65; font-size: 17px;
+  }
+  .container { max-width: 880px; margin: 0 auto; }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; line-height: 1.2; font-weight: 700; }
+  h2 { font-size: 1.9em; margin: 0 0 10px; }
+  h3 { font-size: 1.22em; margin: 0 0 8px; }
+  p { margin: 0 0 12px; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative; overflow: hidden;
+    background: var(--night); color: #fff;
+    border-radius: 24px; padding: 40px 28px 0; text-align: center; margin-bottom: 18px;
+  }
+  .hero .eyebrow { color: var(--gold); }
+  .hero h1 { font-size: 3.1em; font-weight: 800; margin: 0 0 8px; color: #fff; }
+  .hero .subtitle { color: #d9deea; margin: 0; font-size: 1.05em; }
+  .hero .subtitle strong { color: #fff; }
+  .chips { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 16px; position: relative; z-index: 1; }
+  .chip { font-weight: 800; font-size: 0.85em; padding: 5px 14px; border-radius: 999px; background: rgba(255,255,255,0.1); color: #f3e6b3; border: 1px solid rgba(243,230,179,0.35); }
+  .hero-scene { display: block; width: calc(100% + 56px); max-width: none; height: auto; margin: -10px -28px 0; }
+  .hero-moon { position: absolute; top: 22px; right: 34px; width: 76px; height: 76px; }
+  .eyebrow { font-weight: 800; font-size: 0.78em; letter-spacing: 0.14em; text-transform: uppercase; color: var(--terracotta); margin: 0 0 6px; }
+
+  /* ---------- Tabs ---------- */
+  .tabs-wrap { position: -webkit-sticky; position: sticky; top: 0; z-index: 5; background: var(--paper); padding: 8px 0 10px; margin-bottom: 8px; }
+  .tabs { display: flex; gap: 6px; background: var(--card); border: 1px solid var(--rule-strong); border-radius: 999px; padding: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn { flex: 1 0 auto; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 6px 14px 6px 8px; background: transparent; border: none; border-radius: 999px; cursor: pointer; font-family: inherit; font-weight: 800; font-size: 0.93em; color: var(--muted); white-space: nowrap; -webkit-appearance: none; appearance: none; }
+  .tab-btn .n { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--tint); border: 1px solid var(--rule-strong); font-size: 0.85em; color: var(--ink); }
+  .tab-btn:hover:not(.active) { background: var(--tint); color: var(--ink); }
+  .tab-btn.active { background: var(--ink); color: #fff; }
+  .tab-btn.active .n { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+
+  /* ---------- Panels ---------- */
+  .tab-content { background: var(--card); border: 1px solid var(--rule); padding: 34px 36px; border-radius: 24px; box-shadow: 0 1px 0 var(--rule), 0 12px 30px rgba(42,34,56,0.06); display: none; }
+  .tab-content.active { display: block; }
+  .lead { font-size: 1.12em; color: var(--muted); margin-bottom: 18px; }
+  .card { background: var(--tint); border: 1px solid var(--rule); padding: 22px 24px; border-radius: 18px; margin: 18px 0; }
+  .task { background: var(--card); border: 2px solid var(--terracotta); border-radius: 18px; padding: 22px 24px; margin: 20px 0; }
+  .note { background: var(--lapis-soft); border: 1px solid #cfdeed; padding: 16px 20px; border-radius: 16px; margin: 18px 0; font-size: 0.98em; }
+  .note ul, .card ul { padding-left: 22px; margin: 8px 0; }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  .fact { background: var(--card); border: 1px solid var(--rule); border-radius: 16px; padding: 16px 18px; }
+  .fact h3 { font-size: 1.05em; margin-bottom: 4px; }
+  .fact p { margin: 0; font-size: 0.96em; }
+  .callout { font-family: 'Fraunces', Georgia, serif; font-size: 1.5em; font-weight: 800; color: var(--terracotta); text-align: center; margin: 10px 0 4px; }
+  .muted { color: var(--muted); font-size: 0.92em; }
+
+  /* ---------- Inputs & buttons ---------- */
+  textarea, input[type=text] { width: 100%; padding: 12px 14px; margin: 8px 0; border: 1.5px solid var(--rule-strong); border-radius: 12px; font-family: inherit; font-size: 1em; background: #fff; color: var(--ink); -webkit-appearance: none; appearance: none; }
+  textarea:focus, input[type=text]:focus { outline: none; border-color: var(--lapis); box-shadow: 0 0 0 3px rgba(44,90,138,0.15); }
+  textarea { min-height: 100px; resize: vertical; }
+  label { display: block; margin-top: 14px; }
+  .btn { background: var(--terracotta); color: #fff; border: none; min-height: 44px; padding: 10px 24px; border-radius: 999px; cursor: pointer; font-family: inherit; font-weight: 800; font-size: 1em; margin: 8px 8px 6px 0; box-shadow: 0 2px 0 #8e3519; -webkit-appearance: none; appearance: none; }
+  .btn:hover { background: #a6421f; }
+  .btn:active { transform: translateY(2px); box-shadow: none; }
+  .btn-alt { background: var(--lapis); box-shadow: 0 2px 0 #1d3f63; }
+  .btn-alt:hover { background: #244d77; }
+  .btn-export { background: var(--success); box-shadow: 0 2px 0 #1b5c35; }
+  .btn-export:hover { background: #236c40; }
+  .btn-ghost { background: #fff; color: var(--ink); border: 1.5px solid var(--rule-strong); box-shadow: none; }
+  .btn-ghost:hover { background: var(--tint); }
+  .fb { margin: 8px 0; font-weight: 800; }
+  .fb.good { color: var(--success); }
+  .fb.try { color: var(--terracotta); }
+  .export-status { display: none; background: #dff2e6; color: #145a32; padding: 12px 16px; border-radius: 12px; margin-top: 12px; font-weight: 800; }
+
+  /* ---------- Match (drag or tap) ---------- */
+  .match-rows { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+  .m-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 10px 12px; }
+  .m-label { flex: 1 1 220px; font-weight: 700; }
+  .zone { flex: 1 1 240px; min-height: 48px; border: 2px dashed var(--rule-strong); border-radius: 12px; background: var(--tint); color: var(--muted); font-family: inherit; font-size: 0.95em; text-align: left; padding: 8px 12px; cursor: pointer; -webkit-appearance: none; appearance: none; }
+  .zone.ready { border-color: var(--lapis); background: var(--lapis-soft); }
+  .zone.filled { border-style: solid; border-color: var(--lapis); background: #fff; color: var(--ink); font-weight: 700; }
+  .zone.right { border-color: var(--success); background: #e6f5ec; }
+  .zone.wrong { border-color: var(--terracotta); background: var(--terracotta-soft); }
+  .bank { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; border-radius: 14px; background: var(--card); border: 1px dashed var(--rule-strong); min-height: 64px; }
+  .bank-label { font-weight: 800; font-size: 0.8em; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 14px 0 4px; }
+  .dchip { touch-action: none; -webkit-user-select: none; user-select: none; min-height: 44px; padding: 8px 14px; border-radius: 12px; border: 1.5px solid var(--rule-strong); background: var(--gold-soft); color: var(--ink); font-family: inherit; font-weight: 700; font-size: 0.95em; cursor: grab; -webkit-appearance: none; appearance: none; text-align: left; }
+  .dchip.sel { outline: 3px solid var(--lapis); outline-offset: 2px; }
+  .dchip.lifting { opacity: 0.35; }
+  .ghost { position: fixed; z-index: 50; pointer-events: none; transform: translate(-50%, -50%) rotate(-2deg); box-shadow: 0 10px 24px rgba(0,0,0,0.25); }
+
+  /* sort columns */
+  .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0; }
+  .col { border: 2px dashed var(--rule-strong); border-radius: 14px; background: var(--card); min-height: 150px; padding: 10px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; }
+  .col.ready { border-color: var(--lapis); background: var(--lapis-soft); }
+  .col-title { font-family: 'Fraunces', Georgia, serif; font-weight: 800; text-align: center; font-size: 1.05em; }
+  .col .dchip.right { background: #e6f5ec; border-color: var(--success); }
+  .col .dchip.wrong { background: var(--terracotta-soft); border-color: var(--terracotta); }
+
+  /* order list */
+  .order { list-style: none; padding: 0; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+  .order li { touch-action: none; -webkit-user-select: none; user-select: none; display: flex; align-items: center; gap: 10px; background: #fff; border: 1.5px solid var(--rule-strong); border-radius: 12px; padding: 8px 8px 8px 12px; cursor: grab; }
+  .order li.dragging { background: var(--gold-soft); border-color: var(--gold); box-shadow: 0 8px 18px rgba(0,0,0,0.15); }
+  .order li.right { border-color: var(--success); background: #e6f5ec; }
+  .order li.wrong { border-color: var(--terracotta); background: var(--terracotta-soft); }
+  .order .grip { color: #8a8195; flex: 0 0 auto; }
+  .order .otxt { flex: 1; }
+  .order .arrows { display: flex; gap: 4px; flex: 0 0 auto; }
+  .order .arrows button { width: 40px; height: 40px; border-radius: 10px; border: 1.5px solid var(--rule-strong); background: var(--tint); cursor: pointer; font-size: 1em; color: var(--ink); -webkit-appearance: none; appearance: none; }
+
+  /* choices */
+  .sort-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+  .sort-row:last-child { border-bottom: none; }
+  .sort-row span.txt { flex: 1 1 280px; }
+  .choice { min-height: 44px; padding: 6px 16px; border-radius: 999px; border: 1.5px solid var(--rule-strong); background: #fff; color: var(--ink); cursor: pointer; font-family: inherit; font-weight: 800; font-size: 0.92em; -webkit-appearance: none; appearance: none; }
+  .choice.picked { background: var(--lapis); border-color: var(--lapis); color: #fff; }
+  .mark { width: 22px; font-weight: bold; }
+
+  /* tap words */
+  .mark-line { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+  .syl { font-family: inherit; font-size: 1em; font-weight: 700; min-height: 44px; min-width: 40px; padding: 6px 10px; border-radius: 10px; border: 1.5px solid var(--rule-strong); background: #fff; color: var(--ink); cursor: pointer; -webkit-appearance: none; appearance: none; }
+  .syl.on { background: var(--gold); border-color: #c9951e; }
+  .syl.gap { margin-right: 10px; }
+  .brk { flex-basis: 100%; height: 0; }
+
+  /* dress-up */
+  .dress { display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start; }
+  .dress svg { width: 100%; height: auto; border-radius: 18px; }
+  .wardrobe { display: flex; flex-wrap: wrap; gap: 8px; }
+  .wear { min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--rule-strong); background: #fff; color: var(--ink); font-family: inherit; font-weight: 700; cursor: pointer; -webkit-appearance: none; appearance: none; }
+  .wear.on { background: var(--night); border-color: var(--night); color: #fff; }
+  .wear-def { margin-top: 12px; min-height: 52px; background: var(--card); border: 2px solid var(--gold); border-radius: 14px; padding: 10px 14px; }
+  .layer { display: none; }
+  .layer.on { display: inline; }
+
+  /* poem */
+  .characters { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0 20px; }
+  .who { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 12px; text-align: center; }
+  .who svg { width: 54px; height: 54px; }
+  .who strong { display: block; font-family: 'Fraunces', Georgia, serif; }
+  .who span { font-size: 0.88em; color: var(--muted); }
+  .poem-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0 14px; }
+  .part-head { font-weight: 800; font-size: 0.8em; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 10px; margin: 18px 0 8px; }
+  .part-head::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+  .part-head.two { color: var(--terracotta); }
+  .stanza { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 12px 16px 14px; margin: 10px 0; }
+  .stanza.speaking { border-color: var(--gold); background: var(--gold-soft); }
+  .st-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .st-num { font-weight: 800; font-size: 0.8em; color: #8a8195; }
+  .listen-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 4px 12px; border-radius: 999px; border: 1.5px solid var(--rule-strong); background: #fff; color: var(--lapis); font-family: inherit; font-weight: 800; font-size: 0.85em; cursor: pointer; -webkit-appearance: none; appearance: none; }
+  .st-text { font-family: 'Fraunces', Georgia, serif; font-size: 1.05em; line-height: 1.75; margin: 0; }
+  .st-text .ind { display: inline-block; padding-left: 2.4em; }
+  .gloss { font: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; border-bottom: 2px dotted var(--lapis); -webkit-appearance: none; appearance: none; }
+  .gloss.seen { background: var(--gold-soft); border-radius: 4px; }
+  .gloss-box { background: var(--gold-soft); border: 2px solid var(--gold); border-radius: 14px; padding: 12px 16px; margin: 0 0 10px; }
+  .gloss-box.hidden { display: none; }
+
+  /* form */
+  .stanza-demo { font-family: 'Fraunces', Georgia, serif; font-size: 1.05em; background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 12px 14px; margin: 10px 0; }
+  .ln { display: flex; align-items: baseline; gap: 10px; padding: 2px 0; }
+  .ln .t { flex: 1; font-style: italic; }
+  .ln .rl { flex: 0 0 26px; width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.72em; color: #fff; }
+  .ln .beats { flex: 0 0 auto; font-family: 'Nunito', sans-serif; font-size: 0.75em; font-weight: 800; color: var(--muted); }
+  .rl.a { background: var(--rh-a); } .rl.b { background: var(--rh-b); } .rl.c { background: var(--rh-c); } .rl.x { background: #9a92a6; }
+  .rw { font-weight: 700; } .rw.a { color: var(--rh-a); } .rw.b { color: var(--rh-b); } .rw.c { color: var(--rh-c); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* sound */
+  .gallop-box { text-align: center; background: var(--night); color: #fff; border-radius: 18px; padding: 22px 16px; margin: 16px 0; }
+  .gallop-box .tlot { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 1.6em; color: #f3e6b3; margin: 6px 0 12px; }
+  .gallop-box .btn { box-shadow: none; }
+  .gallop-box .muted { color: #c8cfdd; }
+
+  /* step nav */
+  .step-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--rule); }
+  .step-nav .spacer { flex: 1; }
+  .nav-btn { min-height: 44px; padding: 10px 20px; border-radius: 999px; font-family: inherit; font-weight: 800; font-size: 0.98em; cursor: pointer; -webkit-appearance: none; appearance: none; border: 1.5px solid var(--rule-strong); background: #fff; color: var(--ink); }
+  .nav-btn.next { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .footer { text-align: center; color: var(--muted); font-size: 0.85em; margin-top: 22px; }
+  .line-count { font-size: 0.9em; color: var(--muted); }
+  .radio-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0; }
+  .radio-row label { margin: 0; display: flex; align-items: center; gap: 8px; background: #fff; border: 1.5px solid var(--rule-strong); border-radius: 12px; padding: 10px 14px; cursor: pointer; }
+
+  /* printable worksheet */
+  #printSheet { display: none; }
+  @media print {
+    @page { margin: 18mm 16mm; }
+    body { background: #fff; padding: 0; font-size: 12pt; }
+    body > .container { display: none !important; }
+    #printSheet { display: block; color: #2a2238; }
+    #printSheet * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  .ps-head { border-bottom: 2px solid #b94c2a; padding-bottom: 10px; margin-bottom: 18px; }
+  .ps-eyebrow { font-weight: 800; font-size: 9pt; letter-spacing: 0.14em; text-transform: uppercase; color: #b94c2a; margin: 0 0 4px; }
+  .ps-head h1 { font-family: 'Fraunces', Georgia, serif; font-size: 24pt; margin: 0 0 4px; color: #2a2238; }
+  .ps-meta { color: #625a70; margin: 0; font-size: 11pt; }
+  .ps-sec { margin: 0 0 16px; page-break-inside: avoid; break-inside: avoid; }
+  .ps-sec h2 { font-family: 'Fraunces', Georgia, serif; font-size: 14pt; margin: 0 0 6px; color: #2c5a8a; border-bottom: 1px solid #e7dbc3; padding-bottom: 3px; }
+  .ps-row { margin: 0 0 6px; }
+  .ps-empty { color: #8a8195; font-style: italic; }
+  .ps-poem { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 13pt; line-height: 1.8; background: #fbf5e8; border: 1px solid #e7dbc3; border-radius: 8px; padding: 10px 14px; }
+  .ps-foot { margin-top: 20px; padding-top: 8px; border-top: 1px solid #e7dbc3; color: #625a70; font-size: 10pt; }
+
+  @media (max-width: 760px) {
+    .hero h1 { font-size: 2.4em; }
+    .hero-moon { width: 54px; height: 54px; top: 14px; right: 16px; }
+    .characters { grid-template-columns: 1fr 1fr; }
+    .tab-btn .lbl-long { display: none; }
+  }
+  @media (max-width: 600px) {
+    body { padding: 12px 12px 30px; font-size: 16px; }
+    .tab-content { padding: 22px 16px; border-radius: 20px; }
+    .card, .task { padding: 18px 14px; }
+    .facts, .two-col { grid-template-columns: 1fr; }
+    .dress { grid-template-columns: 1fr; }
+    .dress svg { max-width: 240px; margin: 0 auto; display: block; }
+    .cols { grid-template-columns: 1fr; }
+    .col { min-height: 90px; }
+    .st-text .ind { padding-left: 1.2em; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="hero">
+    <svg class="hero-moon" viewBox="0 0 80 80" aria-hidden="true">
+      <circle cx="40" cy="40" r="38" fill="#f3e6b3" opacity="0.15"/>
+      <circle cx="40" cy="40" r="26" fill="#f3e6b3"/>
+      <circle cx="32" cy="34" r="4" fill="#e2d197"/><circle cx="48" cy="46" r="5" fill="#e2d197"/><circle cx="44" cy="30" r="2.5" fill="#e2d197"/>
+    </svg>
+    <p class="eyebrow">Ballad Workshop</p>
+    <h1>Poetry Lab</h1>
+    <p class="subtitle"><strong>The Highwayman</strong> by Alfred Noyes (1906)</p>
+    <div class="chips"><span class="chip">A story in verse</span><span class="chip">Repeated lines</span><span class="chip">Hoofbeat rhythm</span></div>
+    <svg class="hero-scene" viewBox="0 0 880 150" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,70 C120,40 220,90 360,60 C500,30 600,80 720,55 C800,40 850,50 880,45 L880,150 L0,150 Z" fill="#2b3a5c"/>
+      <path d="M0,105 C140,80 260,120 420,95 C560,75 700,110 880,90 L880,150 L0,150 Z" fill="#3a3354"/>
+      <path d="M430,150 C440,128 470,118 520,108 C580,96 640,92 700,80 C760,68 820,64 880,62 L880,70 C820,74 768,80 712,92 C650,104 592,110 540,120 C495,129 470,138 466,150 Z" fill="#f3e6b3" opacity="0.85"/>
+      <g fill="#120f1d">
+        <rect x="120" y="66" width="64" height="36" rx="2"/><path d="M114,68 L152,44 L190,68 Z"/><rect x="168" y="48" width="8" height="14"/>
+      </g>
+      <rect x="132" y="76" width="9" height="9" fill="#e7b440"/><rect x="160" y="76" width="9" height="9" fill="#e7b440"/>
+    </svg>
+  </header>
+
+  <nav class="tabs-wrap" aria-label="Lesson steps">
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="road" onclick="showTab('road', this)"><span class="n">1</span>On the Road</button>
+      <button class="tab-btn" data-tab="robbers" onclick="showTab('robbers', this)"><span class="n">2</span>Highwaymen</button>
+      <button class="tab-btn" data-tab="poem" onclick="showTab('poem', this)"><span class="n">3</span><span>Meet<span class="lbl-long"> the Poem</span></span></button>
+      <button class="tab-btn" data-tab="ballad" onclick="showTab('ballad', this)"><span class="n">4</span><span><span class="lbl-long">The </span>Ballad</span></button>
+      <button class="tab-btn" data-tab="sound" onclick="showTab('sound', this)"><span class="n">5</span><span>Sound<span class="lbl-long"> &amp; Image</span></span></button>
+      <button class="tab-btn" data-tab="write" onclick="showTab('write', this)"><span class="n">6</span><span>Write<span class="lbl-long"> Your Ballad</span></span></button>
+    </div>
+  </nav>
+
+  <!-- ================= 1. ON THE ROAD ================= -->
+  <section id="road" class="tab-content active">
+    <p class="eyebrow">Step 1 · On the Road</p>
+    <h2>Where Do Travellers Stop?</h2>
+    <p class="lead">Before we meet the highwayman, let’s think about long journeys: now, and 300 years ago.</p>
+    <div class="task">
+      <p class="eyebrow">Warm up</p>
+      <h3>Your last long trip</h3>
+      <p>Think of the last long trip you took by car or bus. Where did you stop along the way, and why did you stop there?</p>
+      <textarea id="roadNow" placeholder="e.g. We stopped at a servo to get petrol and snacks..."></textarea>
+    </div>
+
+    <h3>Travelling in England in the 1700s</h3>
+    <div class="facts">
+      <div class="fact"><h3>Rough roads</h3><p>Most roads were dirt tracks full of ruts and holes. Rain turned them to mud, and in bad winter weather some could not be used at all.</p></div>
+      <div class="fact"><h3>Slow going</h3><p>An early stagecoach went about 8 km an hour: roughly as fast as you can jog. In 1754 a “Flying Coach” took four and a half days to get from Manchester to London. Today that drive takes about four hours.</p></div>
+      <div class="fact"><h3>Stage by stage</h3><p>Coaches travelled in “stages” of about 16 to 24 km. Horses got tired, so at the end of each stage stood a <strong>coaching inn</strong>, where tired horses were swapped for fresh ones.</p></div>
+      <div class="fact"><h3>The inn</h3><p>Travellers ate, drank and slept at the inn. Coaches rolled through an archway into the <strong>inn-yard</strong> behind, where the stables were. Watch for the inn-yard in the poem!</p></div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Activity 1</p>
+      <h3>Then and now</h3>
+      <p>Each stop on a modern Australian road trip has a partner at an old English inn. <strong>Drag</strong> each 1700s card to its modern partner, or <strong>tap</strong> a card and then tap a box.</p>
+      <div id="matchRoad"></div>
+      <button class="btn" onclick="checkMatch('matchRoad')">Check</button>
+      <div id="matchRoad-fb" class="fb"></div>
+    </div>
+    <div class="step-nav"><span class="spacer"></span><button type="button" class="nav-btn next" onclick="goTab('robbers')">Next: Highwaymen →</button></div>
+  </section>
+
+  <!-- ================= 2. HIGHWAYMEN ================= -->
+  <section id="robbers" class="tab-content">
+    <p class="eyebrow">Step 2 · Highwaymen</p>
+    <h2>Danger on the Road</h2>
+    <p class="lead">Between the inns lay long, lonely stretches of road. That’s where highwaymen waited.</p>
+    <p class="callout">“Stand and deliver!”</p>
+    <p style="text-align:center;" class="muted">Stop, and hand over your money and valuables!</p>
+    <div class="facts">
+      <div class="fact"><h3>Who were they?</h3><p>Highwaymen were robbers on horseback. They stopped coaches and travellers on quiet roads, often at night, and threatened them with pistols. A horse meant they could strike fast and escape fast.</p></div>
+      <div class="fact"><h3>Famous names</h3><p><strong>Dick Turpin</strong> is the most famous. In real life he was a violent burglar and horse thief, and he was hanged in York in 1739. <strong>Claude Duval</strong> was famous for his polite manners. The story goes that he once danced with a lady passenger he was robbing.</p></div>
+      <div class="fact"><h3>Heroes or villains?</h3><p>Stories and songs often turned highwaymen into dashing “gentlemen of the road.” Real highwaymen frightened, hurt and sometimes killed the people they robbed.</p></div>
+      <div class="fact"><h3>Harsh punishment</h3><p>Highway robbery was punished by hanging. Later, many thieves were sent far away instead, as convicts. From 1788, many of them were sent to <strong>Australia</strong>.</p></div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Activity 2</p>
+      <h3>Dress the highwayman</h3>
+      <p>In the poem, Noyes tells us exactly what his highwayman wore. Tap each item from the poem to dress him and find out what it means.</p>
+      <div class="dress">
+        <svg viewBox="0 0 220 380" role="img" aria-label="A figure who gets dressed as a highwayman">
+          <rect width="220" height="380" rx="18" fill="#1f2a44"/>
+          <circle cx="180" cy="44" r="20" fill="#f3e6b3"/>
+          <path d="M0,330 C60,316 140,340 220,322 L220,380 L0,380 Z" fill="#2b3a5c"/>
+          <!-- base figure -->
+          <rect x="88" y="228" width="18" height="122" rx="6" fill="#d9d4c7"/>
+          <rect x="114" y="228" width="18" height="122" rx="6" fill="#d9d4c7"/>
+          <ellipse cx="96" cy="352" rx="14" ry="6" fill="#3a2a1e"/><ellipse cx="124" cy="352" rx="14" ry="6" fill="#3a2a1e"/>
+          <rect x="66" y="124" width="14" height="92" rx="7" fill="#f4efe4"/><rect x="140" y="124" width="14" height="92" rx="7" fill="#f4efe4"/>
+          <rect x="80" y="118" width="60" height="118" rx="12" fill="#f4efe4"/>
+          <circle cx="73" cy="220" r="7" fill="#e7c09b"/><circle cx="147" cy="220" r="7" fill="#e7c09b"/>
+          <rect x="102" y="98" width="16" height="24" fill="#e7c09b"/>
+          <path d="M86,80 C86,58 134,58 134,80 L134,92 C140,96 138,108 132,110 L88,110 C82,108 80,96 86,92 Z" fill="#3a2a1e"/>
+          <circle cx="110" cy="84" r="21" fill="#e7c09b"/>
+          <path d="M89,76 C92,60 128,60 131,76 C122,68 98,68 89,76 Z" fill="#3a2a1e"/>
+          <circle cx="102" cy="84" r="2.2" fill="#2a2238"/><circle cx="118" cy="84" r="2.2" fill="#2a2238"/>
+          <path d="M104,95 Q110,99 116,95" stroke="#9a5b45" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- layers -->
+          <g class="layer" data-layer="breeches">
+            <rect x="86" y="222" width="48" height="20" rx="6" fill="#8a6a48"/>
+            <rect x="86" y="230" width="22" height="64" rx="7" fill="#8a6a48"/><rect x="112" y="230" width="22" height="64" rx="7" fill="#8a6a48"/>
+          </g>
+          <g class="layer" data-layer="boots">
+            <path d="M84,262 L110,262 L108,350 L86,350 Z" fill="#1f1a17"/><path d="M110,262 L136,262 L134,350 L112,350 Z" fill="#1f1a17"/>
+            <rect x="82" y="258" width="30" height="12" rx="3" fill="#2e2622"/><rect x="108" y="258" width="30" height="12" rx="3" fill="#2e2622"/>
+            <ellipse cx="96" cy="352" rx="15" ry="6" fill="#1f1a17"/><ellipse cx="124" cy="352" rx="15" ry="6" fill="#1f1a17"/>
+          </g>
+          <g class="layer" data-layer="coat">
+            <path d="M80,118 L104,118 L106,178 L100,304 L66,300 L74,170 Z" fill="#7a1f3d"/>
+            <path d="M140,118 L116,118 L114,178 L120,304 L154,300 L146,170 Z" fill="#7a1f3d"/>
+            <rect x="63" y="122" width="18" height="92" rx="8" fill="#7a1f3d"/><rect x="139" y="122" width="18" height="92" rx="8" fill="#7a1f3d"/>
+            <rect x="62" y="198" width="20" height="12" rx="4" fill="#5c1530"/><rect x="138" y="198" width="20" height="12" rx="4" fill="#5c1530"/>
+            <g fill="#e7b440"><circle cx="101" cy="136" r="2.5"/><circle cx="101" cy="152" r="2.5"/><circle cx="101" cy="168" r="2.5"/><circle cx="119" cy="136" r="2.5"/><circle cx="119" cy="152" r="2.5"/><circle cx="119" cy="168" r="2.5"/></g>
+          </g>
+          <g class="layer" data-layer="lace">
+            <path d="M100,106 C96,114 98,120 102,124 C96,128 98,136 104,138 C100,142 104,150 110,150 C116,150 120,142 116,138 C122,136 124,128 118,124 C122,120 124,114 120,106 Z" fill="#ffffff"/>
+            <path d="M104,116 Q110,120 116,116 M103,128 Q110,132 117,128 M106,140 Q110,143 114,140" stroke="#d8d2c4" stroke-width="1.4" fill="none"/>
+          </g>
+          <g class="layer" data-layer="rapier">
+            <line x1="150" y1="214" x2="176" y2="338" stroke="#cfd6de" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M140,210 Q150,198 160,210" stroke="#e7b440" stroke-width="3" fill="none"/>
+            <circle cx="150" cy="208" r="4" fill="#e7b440"/><circle cx="148" cy="200" r="3" fill="#e7b440"/>
+          </g>
+          <g class="layer" data-layer="pistols">
+            <rect x="84" y="196" width="52" height="8" rx="3" fill="#3a2a1e"/>
+            <path d="M90,196 L104,196 L104,190 L96,188 L88,180 L84,184 Z" fill="#6b4a2b"/><circle cx="90" cy="186" r="2" fill="#e7b440"/>
+            <path d="M130,196 L116,196 L116,190 L124,188 L132,180 L136,184 Z" fill="#6b4a2b"/><circle cx="130" cy="186" r="2" fill="#e7b440"/>
+          </g>
+          <g class="layer" data-layer="hat">
+            <path d="M76,70 Q110,36 144,70 Q128,62 110,64 Q92,62 76,70 Z" fill="#1b1b22"/>
+            <path d="M88,64 C90,44 130,44 132,64 Z" fill="#1b1b22"/>
+            <path d="M76,70 Q110,36 144,70" stroke="#e7b440" stroke-width="2" fill="none"/>
+            <circle cx="110" cy="52" r="3" fill="#e7b440"/>
+          </g>
+        </svg>
+        <div>
+          <div class="wardrobe" id="wardrobe">
+            <button type="button" class="wear" data-part="hat" data-def="<strong>French cocked-hat:</strong> a hat with the brim folded up on three sides, called a tricorn. Fashionable gentlemen wore them in the 1700s.">French cocked-hat</button>
+            <button type="button" class="wear" data-part="lace" data-def="<strong>A bunch of lace at his chin:</strong> a frilly lace neck-cloth. Lace was expensive, so it showed off wealth.">Lace at his chin</button>
+            <button type="button" class="wear" data-part="coat" data-def="<strong>A coat of the claret velvet:</strong> a velvet coat in claret, a deep wine red. Velvet is soft, rich cloth.">Claret velvet coat</button>
+            <button type="button" class="wear" data-part="breeches" data-def="<strong>Breeches of brown doe-skin:</strong> knee-length trousers made of soft deer leather.">Doe-skin breeches</button>
+            <button type="button" class="wear" data-part="boots" data-def="<strong>Boots up to the thigh:</strong> tall riding boots that protected his legs on horseback.">Boots up to the thigh</button>
+            <button type="button" class="wear" data-part="pistols" data-def="<strong>Pistol butts a-twinkle:</strong> the handles of his two pistols, decorated so they sparkle in the moonlight.">Pistols</button>
+            <button type="button" class="wear" data-part="rapier" data-def="<strong>Rapier hilt a-twinkle:</strong> the shining handle of a rapier, a long, thin sword.">Rapier</button>
+          </div>
+          <div class="wear-def" id="wearDef" aria-live="polite">Tap an item to dress him.</div>
+          <div id="dressDone" class="note" style="display:none;"><strong>Fully dressed!</strong> Noyes makes his highwayman look like a rich gentleman, not a dirty thief. Why do you think the poet dresses him up so finely?
+            <textarea id="dressWhy" placeholder="I think the poet..."></textarea></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Why would someone rob travellers?</h3>
+    <p>Some highwaymen were simply greedy or loved the thrill. But many people in the 1700s were very poor, and life could fall apart fast:</p>
+    <div class="facts">
+      <div class="fact"><h3>No safety net</h3><p>There was no government help like today. If you were poor, you could ask your local <strong>parish</strong> for help, paid for by a local tax. The help was small, often not guaranteed, and you might be sent to a hard-working <strong>workhouse</strong>.</p></div>
+      <div class="fact"><h3>Out of work</h3><p>When wars ended, thousands of soldiers and sailors came home with no jobs. Men who knew how to ride and shoot, but had no money, sometimes turned to robbery.</p></div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Activity 3</p>
+      <h3>Hard times: then and now</h3>
+      <p>Imagine you lost your job and had no money for food. Where could you turn? Drag or tap each card into the right column: <strong>England in the 1700s</strong>, <strong>Australia today</strong>, or <strong>Both</strong>.</p>
+      <div id="sortNet"></div>
+      <button class="btn" onclick="checkCols('sortNet')">Check</button>
+      <div id="sortNet-fb" class="fb"></div>
+    </div>
+
+    <div class="note">
+      <strong>An Australian connection.</strong> About 160,000 convicts were sent from Britain to Australia between 1788 and 1868. Many of them had been convicted of theft. Australia later had its own highwaymen, the <strong>bushrangers</strong>, who robbed travellers and coaches in the bush. The most famous, <strong>Ned Kelly</strong>, was hanged in Melbourne in 1880.
+    </div>
+
+    <div class="task">
+      <p class="eyebrow">Think and write</p>
+      <h3>Hungry or greedy?</h3>
+      <p>Imagine a young man in 1750. He has lost his job, and his family is hungry. What choices does he have? Does being hungry make robbery right? Think about the travellers he would frighten, too.</p>
+      <textarea id="whyRob" placeholder="I think..."></textarea>
+    </div>
+    <div class="step-nav"><button type="button" class="nav-btn" onclick="goTab('road')">← Back</button><button type="button" class="nav-btn next" onclick="goTab('poem')">Next: Meet the Poem →</button></div>
+  </section>
+
+  <!-- ================= 3. MEET THE POEM ================= -->
+  <section id="poem" class="tab-content">
+    <p class="eyebrow">Step 3 · Meet the Poem</p>
+    <h2>The Highwayman</h2>
+    <p class="lead">Alfred Noyes wrote this poem in 1906, about a highwayman in the 1700s. It is told in two parts, like a story.</p>
+    <div class="characters">
+      <div class="who"><svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28" fill="#1f2a44"/><path d="M12,26 Q30,6 48,26 Q38,22 30,23 Q22,22 12,26 Z" fill="#111"/><circle cx="30" cy="34" r="10" fill="#e7c09b"/><path d="M14,58 C16,46 44,46 46,58 Z" fill="#7a1f3d"/></svg><strong>The highwayman</strong><span>a robber who loves Bess</span></div>
+      <div class="who"><svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28" fill="#f8e4da"/><path d="M17,34 C14,16 46,16 43,34 L45,52 L15,52 Z" fill="#1b1b22"/><circle cx="30" cy="31" r="10" fill="#e7c09b"/><circle cx="38" cy="22" r="3" fill="#b94c2a"/><path d="M16,58 C18,46 42,46 44,58 Z" fill="#2c5a8a"/></svg><strong>Bess</strong><span>the landlord’s daughter</span></div>
+      <div class="who"><svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28" fill="#e9f0f8"/><path d="M19,28 C18,16 42,16 41,28 Z" fill="#a48d4f"/><circle cx="30" cy="32" r="10" fill="#efe3d3"/><path d="M16,58 C18,46 42,46 44,58 Z" fill="#7d6d58"/></svg><strong>Tim the ostler</strong><span>looks after the horses</span></div>
+      <div class="who"><svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28" fill="#fff1c9"/><rect x="20" y="14" width="20" height="12" rx="3" fill="#1b1b22"/><circle cx="30" cy="32" r="10" fill="#e7c09b"/><path d="M14,58 C16,46 44,46 46,58 Z" fill="#c0392b"/><line x1="46" y1="20" x2="46" y2="56" stroke="#5a3a1e" stroke-width="3"/></svg><strong>King George’s men</strong><span>soldiers in red coats</span></div>
+    </div>
+    <div class="note"><strong>How to read it:</strong> Press <strong>Listen</strong> on any stanza to hear it read aloud, or play a whole part. Tap the <span style="border-bottom:2px dotted var(--lapis);">dotted words</span> to see what they mean.</div>
+    <div class="poem-tools">
+      <button type="button" class="btn btn-alt" onclick="playPart(1)">Listen to Part One</button>
+      <button type="button" class="btn btn-alt" onclick="playPart(2)">Listen to Part Two</button>
+      <button type="button" class="btn btn-ghost" onclick="stopSpeech()">Stop</button>
+    </div>
+    <p id="noSpeech" class="muted" style="display:none;">This browser can’t read aloud. Your tutor can read the poem with you instead.</p>
+    <div id="poemText">
+<div class="part-head">Part One</div>
+<div class="stanza" id="p1s1"><div class="st-head"><span class="st-num">1</span><button type="button" class="listen-btn" data-say="p1s1" aria-label="Listen to stanza 1"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">The wind was a <button type="button" class="gloss" data-word="torrent" data-def="a fast, rushing flood of water">torrent</button> of darkness among the gusty trees.</span><br><span class="pl">The moon was a ghostly <button type="button" class="gloss" data-word="galleon" data-def="a large old sailing ship">galleon</button> tossed upon cloudy seas.</span><br><span class="pl">The road was a ribbon of moonlight over the purple <button type="button" class="gloss" data-word="moor" data-def="wild, open hilly land with few trees">moor</button>,</span><br><span class="pl">And the highwayman came riding—</span><br><span class="ind">Riding—riding—</span><br><span class="pl">The highwayman came riding, up to the old inn-door.</span></p></div>
+<div class="stanza" id="p1s2"><div class="st-head"><span class="st-num">2</span><button type="button" class="listen-btn" data-say="p1s2" aria-label="Listen to stanza 2"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">He’d a <button type="button" class="gloss" data-word="French cocked-hat" data-def="a hat with the brim turned up on three sides (a tricorn)">French cocked-hat</button> on his forehead, a bunch of lace at his chin,</span><br><span class="pl">A coat of the <button type="button" class="gloss" data-word="claret" data-def="dark red, the colour of red wine">claret</button> velvet, and <button type="button" class="gloss" data-word="breeches" data-def="trousers that end just below the knee">breeches</button> of brown <button type="button" class="gloss" data-word="doe-skin" data-def="soft leather made from deer skin">doe-skin</button>.</span><br><span class="pl">They fitted with never a wrinkle. His boots were up to the thigh.</span><br><span class="pl">And he rode with a jewelled twinkle,</span><br><span class="ind">His pistol butts a-twinkle,</span><br><span class="pl">His <button type="button" class="gloss" data-word="rapier hilt" data-def="the handle of a long, thin sword">rapier hilt</button> a-twinkle, under the jewelled sky.</span></p></div>
+<div class="stanza" id="p1s3"><div class="st-head"><span class="st-num">3</span><button type="button" class="listen-btn" data-say="p1s3" aria-label="Listen to stanza 3"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">Over the <button type="button" class="gloss" data-word="cobbles" data-def="rounded stones used to pave a yard or street">cobbles</button> he clattered and clashed in the dark inn-yard.</span><br><span class="pl">He tapped with his whip on the shutters, but all was locked and barred.</span><br><span class="pl">He whistled a tune to the window, and who should be waiting there</span><br><span class="pl">But the landlord’s black-eyed daughter,</span><br><span class="ind">Bess, the landlord’s daughter,</span><br><span class="pl"><button type="button" class="gloss" data-word="plaiting" data-def="braiding">Plaiting</button> a dark red <button type="button" class="gloss" data-word="love-knot" data-def="a ribbon tied in a special knot as a sign of love">love-knot</button> into her long black hair.</span></p></div>
+<div class="stanza" id="p1s4"><div class="st-head"><span class="st-num">4</span><button type="button" class="listen-btn" data-say="p1s4" aria-label="Listen to stanza 4"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">And dark in the dark old inn-yard a <button type="button" class="gloss" data-word="stable-wicket" data-def="a small door in the stable">stable-wicket</button> creaked</span><br><span class="pl">Where Tim the <button type="button" class="gloss" data-word="ostler" data-def="the worker at an inn who looks after travellers’ horses">ostler</button> listened. His face was white and <button type="button" class="gloss" data-word="peaked" data-def="thin and pale, as if ill">peaked</button>.</span><br><span class="pl">His eyes were hollows of madness, his hair like mouldy hay,</span><br><span class="pl">But he loved the landlord’s daughter,</span><br><span class="ind">The landlord’s red-lipped daughter.</span><br><span class="pl">Dumb as a dog he listened, and he heard the robber say—</span></p></div>
+<div class="stanza" id="p1s5"><div class="st-head"><span class="st-num">5</span><button type="button" class="listen-btn" data-say="p1s5" aria-label="Listen to stanza 5"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">“One kiss, my bonny sweetheart, I’m after a prize to-night,</span><br><span class="pl">But I shall be back with the yellow gold before the morning light;</span><br><span class="pl">Yet, if they press me sharply, and <button type="button" class="gloss" data-word="harry" data-def="chase and attack again and again">harry</button> me through the day,</span><br><span class="pl">Then look for me by moonlight,</span><br><span class="ind">Watch for me by moonlight,</span><br><span class="pl">I’ll come to thee by moonlight, <button type="button" class="gloss" data-word="though hell should bar the way" data-def="even if the worst thing imaginable tried to stop me">though hell should bar the way</button>.”</span></p></div>
+<div class="stanza" id="p1s6"><div class="st-head"><span class="st-num">6</span><button type="button" class="listen-btn" data-say="p1s6" aria-label="Listen to stanza 6"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">He rose upright in the stirrups. He scarce could reach her hand,</span><br><span class="pl">But she loosened her hair in the <button type="button" class="gloss" data-word="casement" data-def="a window that opens outwards on hinges">casement</button>. His face burnt like a <button type="button" class="gloss" data-word="brand" data-def="a piece of burning wood">brand</button></span><br><span class="pl">As the black cascade of perfume came tumbling over his breast;</span><br><span class="pl">And he kissed its waves in the moonlight,</span><br><span class="ind">(O, sweet black waves in the moonlight!)</span><br><span class="pl">Then he tugged at his rein in the moonlight, and galloped away to the west.</span></p></div>
+<div class="part-head two">Part Two</div>
+<div class="stanza" id="p2s1"><div class="st-head"><span class="st-num">1</span><button type="button" class="listen-btn" data-say="p2s1" aria-label="Listen to stanza 1"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">He did not come in the dawning. He did not come at noon;</span><br><span class="pl">And out of the <button type="button" class="gloss" data-word="tawny" data-def="orange-brown">tawny</button> sunset, before the rise of the moon,</span><br><span class="pl">When the road was a gypsy’s ribbon, looping the purple moor,</span><br><span class="pl">A <button type="button" class="gloss" data-word="red-coat troop" data-def="a group of British soldiers, who wore red coats">red-coat troop</button> came marching—</span><br><span class="ind">Marching—marching—</span><br><span class="pl">King George’s men came marching, up to the old inn-door.</span></p></div>
+<div class="stanza" id="p2s2"><div class="st-head"><span class="st-num">2</span><button type="button" class="listen-btn" data-say="p2s2" aria-label="Listen to stanza 2"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">They said no word to the landlord. They drank his ale instead.</span><br><span class="pl">But they gagged his daughter, and bound her, to the foot of her narrow bed.</span><br><span class="pl">Two of them knelt at her casement, with <button type="button" class="gloss" data-word="muskets" data-def="long guns used by soldiers in the 1700s">muskets</button> at their side!</span><br><span class="pl">There was death at every window;</span><br><span class="ind">And hell at one dark window;</span><br><span class="pl">For Bess could see, through her casement, the road that he would ride.</span></p></div>
+<div class="stanza" id="p2s3"><div class="st-head"><span class="st-num">3</span><button type="button" class="listen-btn" data-say="p2s3" aria-label="Listen to stanza 3"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">They had tied her up to attention, with many a <button type="button" class="gloss" data-word="sniggering jest" data-def="a mean, mocking joke">sniggering jest</button>.</span><br><span class="pl">They had bound a musket beside her, with the muzzle beneath her breast!</span><br><span class="pl">“Now, keep good watch!” and they kissed her. She heard the doomed man say—</span><br><span class="pl"><i>Look for me by moonlight;</i></span><br><span class="ind"><i>Watch for me by moonlight;</i></span><br><span class="pl"><i>I’ll come to thee by moonlight, though hell should bar the way!</i></span></p></div>
+<div class="stanza" id="p2s4"><div class="st-head"><span class="st-num">4</span><button type="button" class="listen-btn" data-say="p2s4" aria-label="Listen to stanza 4"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">She twisted her hands behind her; but all the knots held good!</span><br><span class="pl">She writhed her hands till her fingers were wet with sweat or blood!</span><br><span class="pl">They stretched and strained in the darkness, and the hours crawled by like years</span><br><span class="pl">Till, now, on the stroke of midnight,</span><br><span class="ind">Cold, on the stroke of midnight,</span><br><span class="pl">The tip of one finger touched it! The trigger at least was hers!</span></p></div>
+<div class="stanza" id="p2s5"><div class="st-head"><span class="st-num">5</span><button type="button" class="listen-btn" data-say="p2s5" aria-label="Listen to stanza 5"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">The tip of one finger touched it. She strove no more for the rest.</span><br><span class="pl">Up, she stood up to attention, with the muzzle beneath her breast.</span><br><span class="pl">She would not risk their hearing; she would not strive again;</span><br><span class="pl">For the road lay bare in the moonlight;</span><br><span class="ind">Blank and bare in the moonlight;</span><br><span class="pl">And the blood of her veins, in the moonlight, throbbed to her love’s refrain.</span></p></div>
+<div class="stanza" id="p2s6"><div class="st-head"><span class="st-num">6</span><button type="button" class="listen-btn" data-say="p2s6" aria-label="Listen to stanza 6"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl"><i>Tlot-tlot; tlot-tlot!</i> Had they heard it? The horsehoofs ringing clear;</span><br><span class="pl"><i>Tlot-tlot; tlot-tlot,</i> in the distance? Were they deaf that they did not hear?</span><br><span class="pl">Down the ribbon of moonlight, over the brow of the hill,</span><br><span class="pl">The highwayman came riding—</span><br><span class="ind">Riding—riding—</span><br><span class="pl">The red coats looked to their <button type="button" class="gloss" data-word="priming" data-def="the gunpowder that gets a musket ready to fire. “Looked to their priming” = got their guns ready">priming</button>! She stood up, straight and still.</span></p></div>
+<div class="stanza" id="p2s7"><div class="st-head"><span class="st-num">7</span><button type="button" class="listen-btn" data-say="p2s7" aria-label="Listen to stanza 7"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl"><i>Tlot-tlot,</i> in the frosty silence! <i>Tlot-tlot,</i> in the echoing night!</span><br><span class="pl">Nearer he came and nearer. Her face was like a light.</span><br><span class="pl">Her eyes grew wide for a moment; she drew one last deep breath,</span><br><span class="pl">Then her finger moved in the moonlight,</span><br><span class="ind">Her musket shattered the moonlight,</span><br><span class="pl">Shattered her breast in the moonlight and warned him—with her death.</span></p></div>
+<div class="stanza" id="p2s8"><div class="st-head"><span class="st-num">8</span><button type="button" class="listen-btn" data-say="p2s8" aria-label="Listen to stanza 8"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">He turned. He <button type="button" class="gloss" data-word="spurred" data-def="dug his heels (with spurs) into his horse to make it go faster">spurred</button> to the west; he did not know who stood</span><br><span class="pl">Bowed, with her head o’er the musket, drenched with her own blood!</span><br><span class="pl">Not till the dawn he heard it, and his face grew grey to hear</span><br><span class="pl">How Bess, the landlord’s daughter,</span><br><span class="ind">The landlord’s black-eyed daughter,</span><br><span class="pl">Had watched for her love in the moonlight, and died in the darkness there.</span></p></div>
+<div class="stanza" id="p2s9"><div class="st-head"><span class="st-num">9</span><button type="button" class="listen-btn" data-say="p2s9" aria-label="Listen to stanza 9"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">Back, he spurred like a madman, shrieking a curse to the sky,</span><br><span class="pl">With the white road smoking behind him and his rapier <button type="button" class="gloss" data-word="brandished" data-def="waved in the air">brandished</button> high.</span><br><span class="pl">Blood red were his spurs in the golden noon; wine-red was his velvet coat;</span><br><span class="pl">When they shot him down on the highway,</span><br><span class="ind">Down like a dog on the highway,</span><br><span class="pl">And he lay in his blood on the highway, with a bunch of lace at his throat.</span></p></div>
+<div class="stanza" id="p2s10"><div class="st-head"><span class="st-num">10</span><button type="button" class="listen-btn" data-say="p2s10" aria-label="Listen to stanza 10"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">And still of a winter’s night, they say, when the wind is in the trees,</span><br><span class="pl">When the moon is a ghostly galleon tossed upon cloudy seas,</span><br><span class="pl">When the road is a ribbon of moonlight over the purple moor,</span><br><span class="pl">A highwayman comes riding—</span><br><span class="ind">Riding—riding—</span><br><span class="pl">A highwayman comes riding, up to the old inn-door.</span></p></div>
+<div class="stanza" id="p2s11"><div class="st-head"><span class="st-num">11</span><button type="button" class="listen-btn" data-say="p2s11" aria-label="Listen to stanza 11"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>Listen</button></div><p class="st-text"><span class="pl">Over the cobbles he clatters and clangs in the dark inn-yard.</span><br><span class="pl">He taps with his whip on the shutters, but all is locked and barred.</span><br><span class="pl">He whistles a tune to the window, and who should be waiting there</span><br><span class="pl">But the landlord’s black-eyed daughter,</span><br><span class="ind">Bess, the landlord’s daughter,</span><br><span class="pl">Plaiting a dark red love-knot into her long black hair.</span></p></div>
+    </div>
+    <div id="poemGloss" class="gloss-box hidden" aria-live="polite"></div>
+
+    <div class="card">
+      <p class="eyebrow">Activity 4</p>
+      <h3>Put the story in order</h3>
+      <p>Drag the events into the order they happen in the poem, or use the arrows. Then check.</p>
+      <ol id="orderStory" class="order"></ol>
+      <button class="btn" onclick="checkOrder()">Check</button>
+      <div id="orderStory-fb" class="fb"></div>
+    </div>
+    <div class="task">
+      <p class="eyebrow">Think and write</p>
+      <h3>Tim’s choice</h3>
+      <p>Tim the ostler hears the highwayman’s promise, and the soldiers arrive the next day. Why do you think Tim tells the soldiers? What does the poem say about how Tim feels?</p>
+      <textarea id="timWhy" placeholder="I think Tim..."></textarea>
+    </div>
+    <div class="step-nav"><button type="button" class="nav-btn" onclick="goTab('robbers')">← Back</button><button type="button" class="nav-btn next" onclick="goTab('ballad')">Next: The Ballad →</button></div>
+  </section>
+
+  <!-- ================= 4. THE BALLAD ================= -->
+  <section id="ballad" class="tab-content">
+    <p class="eyebrow">Step 4 · The Ballad</p>
+    <h2>What Makes a Ballad?</h2>
+    <p class="lead">A sonnet captures one big feeling in 14 lines. A ballad tells a whole story.</p>
+    <div class="facts">
+      <div class="fact"><h3>It tells a story</h3><p>Characters, a setting, action and often a sad or dramatic ending.</p></div>
+      <div class="fact"><h3>It was made to be heard</h3><p>Ballads were sung or recited long before most people could read.</p></div>
+      <div class="fact"><h3>It repeats</h3><p>Repeated words and lines, like a chorus, help listeners remember and feel the story.</p></div>
+      <div class="fact"><h3>It has a strong beat</h3><p>You can tap your foot to it, which made it easy to sing.</p></div>
+    </div>
+
+    <h3>A traditional ballad stanza</h3>
+    <p>This is how an old Scottish ballad, <em>Sir Patrick Spens</em>, begins. Most ballad stanzas look like this: 4 lines, beats of 4-3-4-3, and only lines 2 and 4 rhyme.</p>
+    <div class="stanza-demo">
+      <div class="ln"><span class="t">The king sits in Dunfermline town,</span><span class="beats">4 beats</span><span class="rl x">–</span></div>
+      <div class="ln"><span class="t">Drinking the blood-red <span class="rw a">wine</span>:</span><span class="beats">3 beats</span><span class="rl a">A</span></div>
+      <div class="ln"><span class="t">“O where will I get a good sailor,</span><span class="beats">4 beats</span><span class="rl x">–</span></div>
+      <div class="ln"><span class="t">To sail this ship of <span class="rw a">mine</span>?”</span><span class="beats">3 beats</span><span class="rl a">A</span></div>
+    </div>
+    <h3>Noyes’s stanza</h3>
+    <p>Noyes stretches the ballad. His stanzas have <strong>6 lines</strong>, long galloping lines, and a rhyme pattern of <strong>AABCCB</strong>. The short indented line repeats the line before it, like an echo.</p>
+    <div class="stanza-demo">
+      <div class="ln"><span class="t">The wind was a torrent of darkness among the gusty <span class="rw a">trees</span>.</span><span class="rl a">A</span></div>
+      <div class="ln"><span class="t">The moon was a ghostly galleon tossed upon cloudy <span class="rw a">seas</span>.</span><span class="rl a">A</span></div>
+      <div class="ln"><span class="t">The road was a ribbon of moonlight over the purple <span class="rw b">moor</span>,</span><span class="rl b">B</span></div>
+      <div class="ln"><span class="t">And the highwayman came <span class="rw c">riding</span>—</span><span class="rl c">C</span></div>
+      <div class="ln"><span class="t" style="padding-left:2em;">Riding—<span class="rw c">riding</span>—</span><span class="rl c">C</span></div>
+      <div class="ln"><span class="t">The highwayman came riding, up to the old inn-<span class="rw b">door</span>.</span><span class="rl b">B</span></div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Activity 5</p>
+      <h3>Sonnet, ballad, or both?</h3>
+      <p>You’ve studied sonnets. Now compare. Choose the best answer for each feature.</p>
+      <div id="sortForm"></div>
+      <button class="btn" onclick="checkChoices('sortForm')">Check my answers</button>
+      <div id="sortForm-fb" class="fb"></div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Activity 6</p>
+      <h3>Repetition hunt</h3>
+      <p>Here are the last three lines of the first stanza. Tap <strong>every</strong> word that is repeated to sound like hoofbeats.</p>
+      <div id="huntRiding" class="mark-line"></div>
+      <button class="btn" onclick="checkHunt()">Check</button>
+      <div id="huntRiding-fb" class="fb"></div>
+    </div>
+
+    <div class="task">
+      <p class="eyebrow">Think and write</p>
+      <h3>The refrain comes back</h3>
+      <p>In Part One, the highwayman promises: <em>“Look for me by moonlight, / Watch for me by moonlight, / I’ll come to thee by moonlight.”</em> In Part Two, Bess hears those same words in her head while she is tied up. Why do you think Noyes repeats them at her worst moment? How do they sound different the second time?</p>
+      <textarea id="refrainWhy" placeholder="The second time..."></textarea>
+    </div>
+    <div class="step-nav"><button type="button" class="nav-btn" onclick="goTab('poem')">← Back</button><button type="button" class="nav-btn next" onclick="goTab('sound')">Next: Sound &amp; Image →</button></div>
+  </section>
+
+  <!-- ================= 5. SOUND & IMAGE ================= -->
+  <section id="sound" class="tab-content">
+    <p class="eyebrow">Step 5 · Sound &amp; Image</p>
+    <h2>Hear It, See It</h2>
+    <p class="lead">Noyes makes you hear the horse and see the night.</p>
+    <div class="gallop-box">
+      <p class="eyebrow" style="color:var(--gold);">Listen</p>
+      <p class="tlot">Tlot-tlot; tlot-tlot!</p>
+      <button type="button" class="btn" onclick="gallop()">Play the hoofbeats</button>
+      <p class="muted" style="margin:10px 0 0;">“Tlot-tlot” is <strong>onomatopoeia</strong>: a word that sounds like what it describes, like <em>buzz</em> or <em>splash</em>. Listen: the hoofbeats get louder, the way the highwayman comes nearer and nearer.</p>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Activity 7</p>
+      <h3>Feel the gallop</h3>
+      <p>Read the first line aloud. Tap every syllable you hear as <strong>strong</strong>. Tap again to undo.</p>
+      <div id="beatLine" class="mark-line"></div>
+      <button class="btn" onclick="checkBeats()">Check</button>
+      <div id="beatLine-fb" class="fb"></div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Activity 8</p>
+      <h3>Picture it</h3>
+      <p>Noyes paints pictures with words. Match each picture-phrase from the poem to the real thing it describes. Drag, or tap a card and then a box.</p>
+      <div id="matchImage"></div>
+      <button class="btn" onclick="checkMatch('matchImage')">Check</button>
+      <div id="matchImage-fb" class="fb"></div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Activity 9</p>
+      <h3>Metaphor or simile?</h3>
+      <p>A <strong>simile</strong> compares using <em>like</em> or <em>as</em>: “his hair like mouldy hay.” A <strong>metaphor</strong> says one thing <em>is</em> another: “the road was a ribbon.”</p>
+      <div id="sortFig"></div>
+      <button class="btn" onclick="checkChoices('sortFig')">Check my answers</button>
+      <div id="sortFig-fb" class="fb"></div>
+    </div>
+    <div class="step-nav"><button type="button" class="nav-btn" onclick="goTab('ballad')">← Back</button><button type="button" class="nav-btn next" onclick="goTab('write')">Next: Write →</button></div>
+  </section>
+
+  <!-- ================= 6. WRITE ================= -->
+  <section id="write" class="tab-content">
+    <p class="eyebrow">Step 6 · Write Your Ballad</p>
+    <h2>A Journey Ballad</h2>
+    <p class="lead">Now it’s your turn. Write the opening of a ballad about a journey today: a road trip, a late-night bus, a ride home in a storm. Something goes wrong, or something surprising happens.</p>
+    <div class="card">
+      <p class="eyebrow">Plan</p>
+      <label for="planWho"><strong>Who is travelling?</strong></label>
+      <input type="text" id="planWho" placeholder="e.g. a truck driver on the Hume Highway">
+      <label for="planWhere"><strong>Where and when?</strong></label>
+      <input type="text" id="planWhere" placeholder="e.g. a stormy night, far from town">
+      <label for="planStop"><strong>Where do they stop?</strong> (your modern “inn”)</label>
+      <input type="text" id="planStop" placeholder="e.g. a lonely roadhouse with one light on">
+      <label for="planDanger"><strong>What goes wrong, or what surprise is waiting?</strong></label>
+      <input type="text" id="planDanger" placeholder="e.g. the roadhouse is empty, but the radio is playing">
+      <label for="planRefrain"><strong>Your repeated line (refrain)</strong>: something you’ll repeat, like “Riding—riding—”</label>
+      <input type="text" id="planRefrain" placeholder="e.g. Driving—driving—">
+    </div>
+    <h3>Choose your stanza shape</h3>
+    <div class="radio-row">
+      <label><input type="radio" name="shape" value="Traditional: 4 lines, ABCB" checked> Traditional: 4 lines, ABCB</label>
+      <label><input type="radio" name="shape" value="Noyes style: 6 lines, AABCCB"> Noyes style: 6 lines, AABCCB</label>
+    </div>
+    <label for="draftBox"><strong>My first stanza (or two)</strong></label>
+    <textarea id="draftBox" placeholder="Write your stanza here, one line per line..." style="min-height:170px; font-family:'Fraunces', Georgia, serif; font-size:1.08em; line-height:1.7;"></textarea>
+    <div class="line-count" id="lineInfo">0 lines</div>
+    <div id="analysis"></div>
+    <button class="btn btn-export" onclick="exportWork()">Copy for Google Doc</button>
+    <button class="btn" onclick="savePDF()">Save as PDF</button>
+    <div id="exportStatus" class="export-status">Copied to clipboard! Paste it into your Google Doc.</div>
+    <div class="task" style="margin-top:22px;">
+      <p class="eyebrow">Take-home</p>
+      <p style="margin:0;">Finish your ballad: write at least three more stanzas to tell the whole story. Use your refrain at least twice, and give your ending a twist, like Noyes’s ghostly last stanzas.</p>
+    </div>
+    <div class="step-nav"><button type="button" class="nav-btn" onclick="goTab('sound')">← Back</button><span class="spacer"></span></div>
+  </section>
+
+  <p class="footer">Poetry Lab · The Highwayman</p>
+</div>
+
+<div id="printSheet" aria-hidden="true"></div>
+
+<script>
+/* ---------- Tabs ---------- */
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) {
+    btn.classList.add('active');
+    const bar = document.getElementById('tabs');
+    if (bar.scrollWidth > bar.clientWidth) bar.scrollLeft = btn.offsetLeft - 16;
+  }
+  stopSpeech();
+}
+function goTab(id) {
+  showTab(id, document.querySelector('.tab-btn[data-tab="' + id + '"]'));
+  const top = document.querySelector('.tabs-wrap').getBoundingClientRect().top + window.pageYOffset;
+  window.scrollTo(0, top);
+}
+function setFb(id, good, text) {
+  const fb = document.getElementById(id + '-fb');
+  fb.className = 'fb ' + (good ? 'good' : 'try');
+  fb.textContent = text;
+}
+
+/* ---------- Drag or tap helper ---------- */
+let selectedChip = null;
+function selectChip(chip) {
+  document.querySelectorAll('.dchip.sel').forEach(c => c.classList.remove('sel'));
+  document.querySelectorAll('.zone.ready, .col.ready').forEach(z => z.classList.remove('ready'));
+  if (selectedChip === chip) { selectedChip = null; return; }
+  selectedChip = chip;
+  if (chip) {
+    chip.classList.add('sel');
+    const root = chip.closest('[data-widget]');
+    root.querySelectorAll('.zone, .col').forEach(z => z.classList.add('ready'));
+  }
+}
+function enableDrag(chip, dropAt) {
+  chip.addEventListener('pointerdown', e => {
+    if (e.button && e.button > 0) return;
+    if (e.pointerType === 'mouse') e.preventDefault();
+    const sx = e.clientX, sy = e.clientY;
+    let ghost = null;
+    const move = ev => {
+      if (!ghost && Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) > 8) {
+        ghost = chip.cloneNode(true);
+        ghost.classList.add('ghost'); ghost.classList.remove('sel');
+        ghost.style.width = chip.offsetWidth + 'px';
+        document.body.appendChild(ghost);
+        chip.classList.add('lifting');
+      }
+      if (ghost) { ghost.style.left = ev.clientX + 'px'; ghost.style.top = ev.clientY + 'px'; ev.preventDefault(); }
+    };
+    const up = ev => {
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', up);
+      document.removeEventListener('pointercancel', up);
+      if (ghost) {
+        ghost.parentNode.removeChild(ghost);
+        chip.classList.remove('lifting');
+        chip._dragged = true;
+        setTimeout(() => { chip._dragged = false; }, 50);
+        dropAt(document.elementFromPoint(ev.clientX, ev.clientY));
+      }
+    };
+    document.addEventListener('pointermove', move, { passive: false });
+    document.addEventListener('pointerup', up);
+    document.addEventListener('pointercancel', up);
+  });
+  chip.addEventListener('click', e => {
+    e.stopPropagation();
+    if (chip._dragged) return;
+    selectChip(chip);
+  });
+}
+function makeChip(text, key) {
+  const c = document.createElement('button');
+  c.type = 'button'; c.className = 'dchip'; c.textContent = text; c.dataset.key = key;
+  return c;
+}
+
+/* ---------- Match widget ---------- */
+const matchData = {
+  matchRoad: {
+    slots: [
+      ['Servo: fuel up the car', 'horses'],
+      ['Roadhouse café or drive-through', 'meals'],
+      ['Motel', 'bed'],
+      ['Toll road: pay to use the road', 'toll'],
+      ['Car park', 'stables']
+    ],
+    chips: [
+      ['Stables in the inn-yard, where the ostler looks after the horses', 'stables'],
+      ['Fresh horses swapped in at the inn', 'horses'],
+      ['Turnpike gate: pay a toll to use the road', 'toll'],
+      ['A bed at the inn for the night', 'bed'],
+      ['Hot meals and drinks in the inn’s taproom', 'meals']
+    ],
+    good: '✓ All matched! The inn was the 1700s version of a servo, café, motel and car park all in one.'
+  },
+  matchImage: {
+    slots: [
+      ['“a torrent of darkness”', 'wind'],
+      ['“a ghostly galleon tossed upon cloudy seas”', 'moon'],
+      ['“a ribbon of moonlight”', 'road'],
+      ['“the black cascade of perfume”', 'hair'],
+      ['“hollows of madness”', 'eyes']
+    ],
+    chips: [
+      ['Bess’s long hair', 'hair'],
+      ['the road', 'road'],
+      ['Tim’s eyes', 'eyes'],
+      ['the wind', 'wind'],
+      ['the moon', 'moon']
+    ],
+    good: '✓ All matched! Each picture makes the night feel wild, ghostly and dangerous.'
+  }
+};
+function buildMatch(id) {
+  const d = matchData[id], root = document.getElementById(id);
+  root.setAttribute('data-widget', 'match');
+  const rows = document.createElement('div'); rows.className = 'match-rows';
+  const bank = document.createElement('div'); bank.className = 'bank';
+  const place = (zone, chip) => {
+    const prev = chip.parentNode;
+    if (prev && prev !== zone && prev.classList && prev.classList.contains('zone')) { prev.classList.remove('filled', 'right', 'wrong'); prev.textContent = 'Drop here'; }
+    if (zone.firstChild && zone.firstChild.classList && zone.firstChild.classList.contains('dchip')) bank.appendChild(zone.firstChild);
+    zone.textContent = '';
+    zone.appendChild(chip);
+    zone.classList.add('filled'); zone.classList.remove('right', 'wrong');
+    chip.classList.remove('sel'); selectChip(null);
+  };
+  const toBank = chip => {
+    const z = chip.parentNode;
+    bank.appendChild(chip);
+    if (z && z.classList.contains('zone')) { z.classList.remove('filled', 'right', 'wrong'); z.textContent = 'Drop here'; }
+    selectChip(null);
+  };
+  d.slots.forEach(([label, key]) => {
+    const r = document.createElement('div'); r.className = 'm-row';
+    const l = document.createElement('span'); l.className = 'm-label'; l.textContent = label;
+    const z = document.createElement('div'); z.className = 'zone'; z.dataset.key = key; z.textContent = 'Drop here';
+    z.setAttribute('role', 'button'); z.tabIndex = 0;
+    z.addEventListener('click', () => {
+      if (selectedChip && root.contains(selectedChip)) place(z, selectedChip);
+    });
+    r.appendChild(l); r.appendChild(z); rows.appendChild(r);
+  });
+  d.chips.forEach(([text, key]) => {
+    const c = makeChip(text, key);
+    enableDrag(c, el => {
+      const z = el && el.closest ? el.closest('.zone') : null;
+      if (z && root.contains(z)) place(z, c);
+      else if (el && el.closest && el.closest('.bank') === bank) toBank(c);
+    });
+    c.addEventListener('dblclick', () => toBank(c));
+    bank.appendChild(c);
+  });
+  bank.addEventListener('click', () => { if (selectedChip && root.contains(selectedChip)) toBank(selectedChip); });
+  const lab = document.createElement('div'); lab.className = 'bank-label'; lab.textContent = 'Cards';
+  root.appendChild(rows); root.appendChild(lab); root.appendChild(bank);
+}
+function checkMatch(id) {
+  const zones = document.querySelectorAll('#' + id + ' .zone');
+  let right = 0, filled = 0;
+  zones.forEach(z => {
+    const c = z.querySelector('.dchip');
+    z.classList.remove('right', 'wrong');
+    if (!c) return;
+    filled++;
+    if (c.dataset.key === z.dataset.key) { right++; z.classList.add('right'); } else z.classList.add('wrong');
+  });
+  if (right === zones.length) setFb(id, true, matchData[id].good);
+  else setFb(id, false, right + ' of ' + zones.length + ' correct' + (filled < zones.length ? ' (some boxes are still empty)' : '') + '. Tap a card in a red box to move it.');
+}
+
+/* ---------- Column sort widget ---------- */
+const colData = {
+  sortNet: {
+    cols: [['then', 'England in the 1700s'], ['now', 'Australia today'], ['both', 'Both']],
+    chips: [
+      ['Payments from Centrelink while you look for work', 'now'],
+      ['Help from family, friends or a church', 'both'],
+      ['Help from your local parish, paid for by a local tax', 'then'],
+      ['Free care in a public hospital through Medicare', 'now'],
+      ['Being sent to live and work in a workhouse', 'then'],
+      ['Food from a charity', 'both'],
+      ['Being hanged for stealing', 'then']
+    ],
+    good: '✓ All correct! Today Australia has a safety net run by the government. In the 1700s, help was small and uncertain, and crime was punished very harshly.'
+  }
+};
+function buildCols(id) {
+  const d = colData[id], root = document.getElementById(id);
+  root.setAttribute('data-widget', 'cols');
+  const cols = document.createElement('div'); cols.className = 'cols';
+  const bank = document.createElement('div'); bank.className = 'bank';
+  const put = (col, chip) => { col.appendChild(chip); chip.classList.remove('right', 'wrong'); selectChip(null); };
+  d.cols.forEach(([key, title]) => {
+    const c = document.createElement('div'); c.className = 'col'; c.dataset.key = key;
+    c.setAttribute('role', 'button'); c.tabIndex = 0;
+    const t = document.createElement('div'); t.className = 'col-title'; t.textContent = title;
+    c.appendChild(t);
+    c.addEventListener('click', () => { if (selectedChip && root.contains(selectedChip)) put(c, selectedChip); });
+    cols.appendChild(c);
+  });
+  d.chips.forEach(([text, key]) => {
+    const ch = makeChip(text, key);
+    enableDrag(ch, el => {
+      const c = el && el.closest ? el.closest('.col') : null;
+      if (c && root.contains(c)) put(c, ch);
+      else if (el && el.closest && el.closest('.bank') === bank) { bank.appendChild(ch); ch.classList.remove('right', 'wrong'); }
+    });
+    bank.appendChild(ch);
+  });
+  bank.addEventListener('click', () => { if (selectedChip && root.contains(selectedChip)) { bank.appendChild(selectedChip); selectedChip.classList.remove('right','wrong'); selectChip(null); } });
+  const lab = document.createElement('div'); lab.className = 'bank-label'; lab.textContent = 'Cards';
+  root.appendChild(cols); root.appendChild(lab); root.appendChild(bank);
+}
+function checkCols(id) {
+  const chips = document.querySelectorAll('#' + id + ' .dchip');
+  let right = 0, placed = 0;
+  chips.forEach(ch => {
+    const col = ch.parentNode.classList.contains('col') ? ch.parentNode : null;
+    ch.classList.remove('right', 'wrong');
+    if (!col) return;
+    placed++;
+    if (col.dataset.key === ch.dataset.key) { right++; ch.classList.add('right'); } else ch.classList.add('wrong');
+  });
+  if (right === chips.length) setFb(id, true, colData[id].good);
+  else setFb(id, false, right + ' of ' + chips.length + ' correct' + (placed < chips.length ? ' (some cards are not sorted yet)' : '') + '. Move the red cards and check again.');
+}
+
+/* ---------- Order widget ---------- */
+const storyEvents = [
+  'The highwayman rides to the inn to see Bess.',
+  'Tim the ostler hears him promise to come back by moonlight.',
+  'King George’s soldiers arrive and tie Bess up at her window.',
+  'Bess works one finger onto the trigger of the musket.',
+  'Bess fires the musket to warn the highwayman.',
+  'The highwayman hears what happened and rides back in anger.',
+  'The soldiers shoot him down on the highway.',
+  'People say their ghosts still return on winter nights.'
+];
+const startOrder = [3, 6, 0, 5, 2, 7, 1, 4];
+function buildOrder() {
+  const ol = document.getElementById('orderStory');
+  startOrder.forEach(i => {
+    const li = document.createElement('li'); li.dataset.i = i;
+    li.innerHTML = '<svg class="grip" width="14" height="20" viewBox="0 0 14 20" aria-hidden="true"><g fill="currentColor"><circle cx="4" cy="4" r="1.8"/><circle cx="10" cy="4" r="1.8"/><circle cx="4" cy="10" r="1.8"/><circle cx="10" cy="10" r="1.8"/><circle cx="4" cy="16" r="1.8"/><circle cx="10" cy="16" r="1.8"/></g></svg>';
+    const t = document.createElement('span'); t.className = 'otxt'; t.textContent = storyEvents[i]; li.appendChild(t);
+    const ar = document.createElement('span'); ar.className = 'arrows';
+    [['↑', -1, 'Move up'], ['↓', 1, 'Move down']].forEach(([s, dir, lbl]) => {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = s; b.setAttribute('aria-label', lbl);
+      b.addEventListener('click', () => {
+        clearOrderMarks();
+        if (dir < 0 && li.previousElementSibling) ol.insertBefore(li, li.previousElementSibling);
+        if (dir > 0 && li.nextElementSibling) ol.insertBefore(li.nextElementSibling, li);
+      });
+      ar.appendChild(b);
+    });
+    li.appendChild(ar);
+    li.addEventListener('pointerdown', e => {
+      if (e.target.closest('button')) return;
+      if (e.button && e.button > 0) return;
+      if (e.pointerType === 'mouse') e.preventDefault();
+      li.classList.add('dragging'); clearOrderMarks();
+      const move = ev => {
+        ev.preventDefault();
+        const items = Array.from(ol.children).filter(x => x !== li);
+        let before = null;
+        for (const it of items) { const r = it.getBoundingClientRect(); if (ev.clientY < r.top + r.height / 2) { before = it; break; } }
+        if (before) { if (li.nextElementSibling !== before) ol.insertBefore(li, before); }
+        else if (ol.lastElementChild !== li) ol.appendChild(li);
+      };
+      const up = () => {
+        li.classList.remove('dragging');
+        document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointerup', up);
+        document.removeEventListener('pointercancel', up);
+      };
+      document.addEventListener('pointermove', move, { passive: false });
+      document.addEventListener('pointerup', up);
+      document.addEventListener('pointercancel', up);
+    });
+    ol.appendChild(li);
+  });
+}
+function clearOrderMarks() { document.querySelectorAll('#orderStory li').forEach(li => li.classList.remove('right', 'wrong')); }
+function checkOrder() {
+  const lis = document.querySelectorAll('#orderStory li');
+  let right = 0;
+  lis.forEach((li, pos) => {
+    const ok = +li.dataset.i === pos;
+    li.classList.toggle('right', ok); li.classList.toggle('wrong', !ok);
+    if (ok) right++;
+  });
+  if (right === lis.length) setFb('orderStory', true, '✓ Perfect! You know the whole story.');
+  else setFb('orderStory', false, right + ' of ' + lis.length + ' are in the right place. Green ones are correct. Look back at the poem and try again.');
+}
+
+/* ---------- Choice rows ---------- */
+const choiceData = {
+  sortForm: {
+    opts: [['sonnet', 'Sonnet'], ['ballad', 'Ballad'], ['both', 'Both']],
+    items: [
+      ['Uses rhyme', 'both', 'Both use rhyme, in different patterns.'],
+      ['Tells a story with characters and events', 'ballad', 'A ballad tells a story. A sonnet usually explores one idea or feeling.'],
+      ['Repeats words or lines like a chorus', 'ballad', 'Repetition like “riding—riding—” is a ballad tool.'],
+      ['Always has exactly 14 lines', 'sonnet', 'Only a sonnet has a fixed length of 14 lines.'],
+      ['Has a strong rhythm you can feel', 'both', 'Both have a beat: iambic da-DUM in sonnets, a galloping beat here.'],
+      ['Can go on for many stanzas', 'ballad', 'A ballad keeps going until the story is told. The Highwayman has 17 stanzas.'],
+      ['Has a turn (volta) at line 9', 'sonnet', 'The volta at line 9 is a sonnet feature.']
+    ]
+  },
+  sortFig: {
+    opts: [['metaphor', 'Metaphor'], ['simile', 'Simile']],
+    items: [
+      ['The wind was a torrent of darkness', 'metaphor', 'The wind IS a torrent: no “like” or “as.”'],
+      ['The road was a ribbon of moonlight', 'metaphor', 'The road IS a ribbon: no “like” or “as.”'],
+      ['His hair like mouldy hay', 'simile', 'It uses “like.”'],
+      ['Her face was like a light', 'simile', 'It uses “like.”'],
+      ['The moon was a ghostly galleon', 'metaphor', 'The moon IS a ship: no “like” or “as.”'],
+      ['Dumb as a dog he listened', 'simile', 'It uses “as.”']
+    ]
+  }
+};
+const choicePicks = {};
+function buildChoices(id) {
+  const d = choiceData[id], box = document.getElementById(id);
+  choicePicks[id] = {};
+  d.items.forEach(([text], i) => {
+    const row = document.createElement('div'); row.className = 'sort-row';
+    const mk = document.createElement('span'); mk.className = 'mark'; mk.id = id + 'Mark' + i;
+    const tx = document.createElement('span'); tx.className = 'txt'; tx.textContent = (i + 1) + '. ' + text;
+    row.appendChild(mk); row.appendChild(tx);
+    d.opts.forEach(([v, lbl]) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'choice'; b.textContent = lbl;
+      b.addEventListener('click', () => {
+        choicePicks[id][i] = v;
+        row.querySelectorAll('.choice').forEach(c => c.classList.remove('picked'));
+        b.classList.add('picked');
+      });
+      row.appendChild(b);
+    });
+    const why = document.createElement('div'); why.id = id + 'Why' + i;
+    why.style.cssText = 'flex-basis:100%; font-size:0.9em; color:#625a70; display:none;';
+    row.appendChild(why);
+    box.appendChild(row);
+  });
+}
+function checkChoices(id) {
+  const d = choiceData[id];
+  let right = 0, answered = 0;
+  d.items.forEach(([, ans, expl], i) => {
+    const mk = document.getElementById(id + 'Mark' + i), why = document.getElementById(id + 'Why' + i);
+    const p = choicePicks[id][i];
+    if (!p) { mk.textContent = ''; why.style.display = 'none'; return; }
+    answered++;
+    if (p === ans) { right++; mk.textContent = '✓'; mk.style.color = '#1e8449'; } else { mk.textContent = '✗'; mk.style.color = '#a04000'; }
+    why.textContent = expl; why.style.display = 'block';
+  });
+  setFb(id, right === d.items.length, right + ' of ' + d.items.length + ' correct' + (answered < d.items.length ? ' (some not answered yet)' : '') + '.');
+}
+
+/* ---------- Tap-word activities ---------- */
+const huntWords = [
+  ['And','the','highwayman','came','riding—'],
+  ['Riding—','riding—'],
+  ['The','highwayman','came','riding,','up','to','the','old','inn-door.']
+];
+function buildHunt() {
+  const box = document.getElementById('huntRiding');
+  huntWords.forEach((line, li) => {
+    line.forEach(w => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'syl'; b.textContent = w;
+      b.dataset.ok = /^riding/i.test(w) ? '1' : '0';
+      b.addEventListener('click', () => b.classList.toggle('on'));
+      box.appendChild(b);
+    });
+    if (li < huntWords.length - 1) { const br = document.createElement('span'); br.className = 'brk'; box.appendChild(br); }
+  });
+}
+function checkHunt() {
+  const bs = document.querySelectorAll('#huntRiding .syl');
+  let ok = true, found = 0;
+  bs.forEach(b => {
+    const on = b.classList.contains('on');
+    if (on && b.dataset.ok === '1') found++;
+    if (on !== (b.dataset.ok === '1')) ok = false;
+  });
+  if (ok) setFb('huntRiding', true, '✓ Yes! “Riding” comes 4 times in 3 lines. Read it aloud: you can hear the horse coming closer.');
+  else setFb('huntRiding', false, 'Not yet. You found ' + found + '. Look for one word that keeps coming back, and only tap that word.');
+}
+const beatSyl = ['The','wind','was','a','tor','rent','of','dark','ness','a','mong','the','gus','ty','trees.'];
+const beatGapAfter = [0,1,2,3,5,6,8,10,11,13];
+const beatStrong = [1, 4, 7, 10, 12, 14];
+function buildBeats() {
+  const box = document.getElementById('beatLine');
+  beatSyl.forEach((s, i) => {
+    const b = document.createElement('button'); b.type = 'button';
+    b.className = 'syl' + (beatGapAfter.indexOf(i) > -1 ? ' gap' : '');
+    b.textContent = s;
+    b.addEventListener('click', () => b.classList.toggle('on'));
+    box.appendChild(b);
+  });
+}
+function checkBeats() {
+  const bs = document.querySelectorAll('#beatLine .syl');
+  let right = 0;
+  bs.forEach((b, i) => { if (b.classList.contains('on') === (beatStrong.indexOf(i) > -1)) right++; });
+  if (right === bs.length) setFb('beatLine', true, '✓ Six strong beats: the WIND was a TOR-rent of DARK-ness a-MONG the GUS-ty TREES. Hear the da-da-DUM? That’s a gallop, not the sonnet’s steady da-DUM.');
+  else setFb('beatLine', false, right + ' of ' + bs.length + ' syllables match. Say it aloud with a gallop: da-DUM, da-da-DUM... Hint: there are 6 strong beats.');
+}
+
+/* ---------- Dress-up ---------- */
+document.querySelectorAll('.wear').forEach(b => {
+  b.addEventListener('click', () => {
+    const on = b.classList.toggle('on');
+    const layer = document.querySelector('.layer[data-layer="' + b.dataset.part + '"]');
+    layer.classList.toggle('on', on);
+    document.getElementById('wearDef').innerHTML = b.dataset.def;
+    const all = document.querySelectorAll('.wear').length;
+    const done = document.querySelectorAll('.wear.on').length === all;
+    if (done) document.getElementById('dressDone').style.display = 'block';
+  });
+});
+
+/* ---------- Glosses ---------- */
+document.querySelectorAll('#poemText .gloss').forEach(b => {
+  b.addEventListener('click', () => {
+    const box = document.getElementById('poemGloss');
+    b.closest('.stanza').insertAdjacentElement('afterend', box);
+    box.classList.remove('hidden');
+    box.innerHTML = '<strong>' + b.dataset.word + '</strong> = ' + b.dataset.def;
+    b.classList.add('seen');
+  });
+});
+
+/* ---------- Read aloud ---------- */
+const canSpeak = 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
+function pickVoice() {
+  const vs = window.speechSynthesis.getVoices() || [];
+  return vs.find(v => /en-GB/i.test(v.lang)) || vs.find(v => /en-AU/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null;
+}
+function clearSpeaking() { document.querySelectorAll('.stanza.speaking').forEach(s => s.classList.remove('speaking')); }
+function stopSpeech() { if (canSpeak) window.speechSynthesis.cancel(); clearSpeaking(); }
+function speakStanzas(ids) {
+  if (!canSpeak) { document.getElementById('noSpeech').style.display = 'block'; return; }
+  window.speechSynthesis.cancel(); clearSpeaking();
+  const v = pickVoice();
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    const text = el.querySelector('.st-text').textContent.replace(/—/g, ', ').replace(/\s+/g, ' ');
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.9; u.lang = v ? v.lang : 'en-GB'; if (v) u.voice = v;
+    u.onstart = () => { clearSpeaking(); el.classList.add('speaking'); };
+    u.onend = () => el.classList.remove('speaking');
+    window.speechSynthesis.speak(u);
+  });
+}
+function playPart(n) {
+  const ids = Array.from(document.querySelectorAll('#poemText .stanza')).map(s => s.id).filter(id => id.indexOf('p' + n + 's') === 0);
+  speakStanzas(ids);
+}
+document.querySelectorAll('.listen-btn').forEach(b => b.addEventListener('click', () => speakStanzas([b.dataset.say])));
+if (canSpeak) { window.speechSynthesis.getVoices(); if ('onvoiceschanged' in window.speechSynthesis) window.speechSynthesis.onvoiceschanged = () => {}; }
+
+/* ---------- Hoofbeats (made by the browser, no sound file needed) ---------- */
+let actx = null;
+function audio() {
+  const C = window.AudioContext || window.webkitAudioContext;
+  if (!C) return null;
+  if (!actx) actx = new C();
+  if (actx.state === 'suspended' && actx.resume) actx.resume();
+  return actx;
+}
+function clop(c, t, vol) {
+  const len = Math.floor(c.sampleRate * 0.07);
+  const buf = c.createBuffer(1, len, c.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 5);
+  const src = c.createBufferSource(); src.buffer = buf;
+  const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1100; f.Q.value = 1.4;
+  const g = c.createGain(); g.gain.value = vol;
+  src.connect(f); f.connect(g); g.connect(c.destination); src.start(t);
+  const o = c.createOscillator(); const og = c.createGain();
+  o.frequency.setValueAtTime(170, t); o.frequency.exponentialRampToValueAtTime(70, t + 0.09);
+  og.gain.setValueAtTime(vol * 0.9, t); og.gain.exponentialRampToValueAtTime(0.001, t + 0.11);
+  o.connect(og); og.connect(c.destination); o.start(t); o.stop(t + 0.13);
+}
+function gallop() {
+  const c = audio(); if (!c) return;
+  const start = c.currentTime + 0.08, n = 14;
+  for (let i = 0; i < n; i++) {
+    const t = start + i * 0.52, v = 0.06 + 0.9 * (i / (n - 1));
+    clop(c, t, v); clop(c, t + 0.15, v * 0.75);
+  }
+}
+
+/* ---------- Draft ---------- */
+function analyzeDraft() {
+  const lines = document.getElementById('draftBox').value.split('\n').filter(l => l.trim());
+  document.getElementById('lineInfo').textContent = lines.length + (lines.length === 1 ? ' line' : ' lines');
+  const ends = lines.map(l => { const m = l.trim().match(/([A-Za-z'’-]+)[^A-Za-z]*$/); return m ? m[1].toLowerCase() : ''; });
+  const a = document.getElementById('analysis');
+  if (!lines.length) { a.innerHTML = ''; return; }
+  a.innerHTML = '<div class="card" style="margin:10px 0;"><strong>Line endings:</strong> ' +
+    ends.map((e, i) => (i + 1) + '. <em>' + esc(e) + '</em>').join(' &nbsp; ') +
+    '<br><span class="muted">Check your rhymes: which endings should sound alike in the shape you chose?</span></div>';
+}
+
+/* ---------- Export ---------- */
+function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function shapeChoice() { const r = document.querySelector('input[name="shape"]:checked'); return r ? r.value : ''; }
+function collectWork() {
+  const raw = id => document.getElementById(id).value.trim();
+  return {
+    date: new Date().toLocaleDateString('en-AU'),
+    sections: [
+      { title: 'On the Road', rows: [['My last long trip', raw('roadNow')]] },
+      { title: 'Highwaymen', rows: [['Why the poet dresses him so finely', raw('dressWhy')], ['Hungry or greedy?', raw('whyRob')]] },
+      { title: 'The Poem', rows: [['Tim’s choice', raw('timWhy')], ['The refrain comes back', raw('refrainWhy')]] },
+      { title: 'My Ballad Plan', rows: [['Traveller', raw('planWho')], ['Where and when', raw('planWhere')], ['The stop', raw('planStop')], ['What goes wrong', raw('planDanger')], ['My refrain', raw('planRefrain')], ['Stanza shape', shapeChoice()]] },
+      { title: 'My Ballad', poem: raw('draftBox') }
+    ]
+  };
+}
+function buildSheetHTML(w) {
+  const empty = '<span class="ps-empty" style="color:#8a8195;font-style:italic;">(not filled in yet)</span>';
+  const body = t => t ? esc(t).replace(/\n/g, '<br>') : empty;
+  let h = '<div class="ps-head"><p class="ps-eyebrow" style="color:#b94c2a;font-weight:bold;">BALLAD WORKSHOP</p>' +
+    '<h1>Poetry Lab – The Highwayman</h1>' +
+    '<p class="ps-meta">Name: ____________________ · Date: ' + w.date + ' · Alfred Noyes (1906)</p></div>';
+  w.sections.forEach(sec => {
+    h += '<div class="ps-sec"><h2>' + sec.title + '</h2>';
+    if ('poem' in sec) h += sec.poem ? '<div class="ps-poem" style="font-style:italic;">' + body(sec.poem) + '</div>' : '<p>' + empty + '</p>';
+    else sec.rows.forEach(([label, v]) => { h += '<p class="ps-row"><strong>' + label + ':</strong> ' + body(v) + '</p>'; });
+    h += '</div>';
+  });
+  h += '<p class="ps-foot"><strong>Take-home:</strong> Finish your ballad with at least three more stanzas. Use your refrain at least twice, and give your ending a twist.</p>';
+  return h;
+}
+function buildSheetText(w) {
+  let t = 'Poetry Lab – The Highwayman (Ballad)\nName: ________________\nDate: ' + w.date + '\n';
+  w.sections.forEach(sec => {
+    t += '\n' + sec.title.toUpperCase() + '\n';
+    if ('poem' in sec) t += (sec.poem || '(no draft yet)') + '\n';
+    else sec.rows.forEach(([label, v]) => { t += label + ': ' + (v || '(not filled in yet)') + '\n'; });
+  });
+  return t + '\n---\nTake-home: finish your ballad with at least three more stanzas.';
+}
+function savePDF() {
+  document.getElementById('printSheet').innerHTML = buildSheetHTML(collectWork());
+  window.print();
+}
+function exportWork() {
+  const w = collectWork();
+  const exportText = buildSheetText(w);
+  const exportHTML = '<div style="font-family:Georgia,serif;">' + buildSheetHTML(w) + '</div>';
+  const ok = () => {
+    const s = document.getElementById('exportStatus');
+    s.style.display = 'block';
+    setTimeout(() => { s.style.display = 'none'; }, 4000);
+  };
+  const fallback = () => {
+    const div = document.createElement('div');
+    div.innerHTML = exportHTML;
+    div.style.cssText = 'position:fixed; top:0; left:-9999px; background:#fff;';
+    document.body.appendChild(div);
+    const range = document.createRange(); range.selectNodeContents(div);
+    const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    let copied = false;
+    try { copied = document.execCommand('copy'); } catch (err) {}
+    sel.removeAllRanges(); document.body.removeChild(div);
+    if (copied) { ok(); return; }
+    document.getElementById('analysis').innerHTML = '<div class="card"><strong>Copy this text into your Google Doc:</strong><textarea style="min-height:260px;">' + esc(exportText) + '</textarea></div>';
+  };
+  if (navigator.clipboard && window.isSecureContext && window.ClipboardItem) {
+    const item = new ClipboardItem({
+      'text/html': new Blob([exportHTML], { type: 'text/html' }),
+      'text/plain': new Blob([exportText], { type: 'text/plain' })
+    });
+    navigator.clipboard.write([item]).then(ok).catch(fallback);
+  } else fallback();
+}
+
+/* ---------- Start ---------- */
+buildMatch('matchRoad');
+buildMatch('matchImage');
+buildCols('sortNet');
+buildOrder();
+buildChoices('sortForm');
+buildChoices('sortFig');
+buildHunt();
+buildBeats();
+document.getElementById('draftBox').addEventListener('input', analyzeDraft);
+if (!canSpeak) document.getElementById('noSpeech').style.display = 'block';
+</script>
+</body>
+</html>
