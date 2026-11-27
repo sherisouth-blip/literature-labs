@@ -1067,14 +1067,36 @@ function xwStep(dir, clear) {
   if (!xwCur) return;
   const dr = xwDir === 'D' ? dir : 0, dc = xwDir === 'A' ? dir : 0;
   const next = xwCells[xwKey(xwCur.r + dr, xwCur.c + dc)];
-  if (next) { if (clear) { next.inp.value = ''; next.el.classList.remove('bad', 'good'); } next.inp.focus(); }
+  if (next) { if (clear) { next.inp.value = ''; next.el.classList.remove('bad', 'good'); xwSave(); } next.inp.focus(); }
 }
 function xwMove(dr, dc) {
   let r = xwCur.r + dr, c = xwCur.c + dc;
   while (r >= 0 && c >= 0 && r < XW.H && c < XW.W) { const x = xwCells[xwKey(r, c)]; if (x) { x.inp.focus(); return; } r += dr; c += dc; }
 }
 function xwWordCells(w) { const out = []; for (let i = 0; i < w.a.length; i++) out.push(xwCells[w.d === 'A' ? xwKey(w.r, w.c + i) : xwKey(w.r + i, w.c)]); return out; }
+// Save the letters as she types, so a reload or an update never wipes her work.
+const XW_SAVE = 'snowyLabCrossword';
+function xwSave() {
+  try {
+    const l = {};
+    Object.entries(xwCells).forEach(([k, x]) => { if (x.inp.value) l[k] = x.inp.value; });
+    if (Object.keys(l).length || xwRevealed) localStorage.setItem(XW_SAVE, JSON.stringify({ l, rv: xwRevealed }));
+    else localStorage.removeItem(XW_SAVE);
+  } catch (e) {}
+}
+function xwRestore() {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(XW_SAVE) || 'null'); } catch (e) {}
+  if (!saved || !saved.l || !Object.keys(saved.l).length) return;
+  Object.entries(saved.l).forEach(([k, v]) => { if (xwCells[k] && /^[A-Z]$/.test(v)) xwCells[k].inp.value = v; });
+  xwRevealed = !!saved.rv;
+  xwWords.forEach(w => w.li.classList.toggle('done', xwWordCells(w).every(x => x.inp.value === x.ans)));
+  // She already studied and started the puzzle: take her straight back to it.
+  document.getElementById('studyPhase').style.display = 'none';
+  document.getElementById('xwPhase').style.display = 'block';
+}
 function xwMarkDone() {
+  xwSave();
   let done = 0;
   xwWords.forEach(w => { const ok = xwWordCells(w).every(x => x.inp.value === x.ans); w.li.classList.toggle('done', ok); if (ok) done++; });
   if (done === xwWords.length) { const fb = document.getElementById('xw-fb'); fb.className = 'fb good'; fb.textContent = '✓ All ' + done + ' words! You are ready to read the poem.'; xwAward(); unlockFirstTask(); }
@@ -1764,6 +1786,7 @@ function checkWordBank() {
 }
 
 buildCrossword();
+xwRestore();
 buildBallad();
 buildSteps();
 buildMatch();
