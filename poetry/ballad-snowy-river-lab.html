@@ -1002,14 +1002,17 @@ function buildCrossword() {
     cell.className = 'xw-cell';
     if (num[k]) cell.innerHTML = '<span class="xn">' + num[k] + '</span>';
     const inp = document.createElement('input');
-    inp.type = 'text'; inp.maxLength = 1; inp.autocomplete = 'off'; inp.setAttribute('autocapitalize', 'characters'); inp.spellcheck = false;
+    inp.type = 'text'; inp.autocomplete = 'off'; inp.setAttribute('autocapitalize', 'characters'); inp.spellcheck = false;
     inp.setAttribute('aria-label', 'Row ' + (r + 1) + ', column ' + (c + 1));
     cell.appendChild(inp); grid.appendChild(cell);
     xwCells[k] = { r, c, ans: ans[k], el: cell, inp };
     inp.addEventListener('mousedown', e => { if (xwCur && xwCur.r === r && xwCur.c === c) { e.preventDefault(); xwToggle(); } });
     inp.addEventListener('focus', () => xwSelect(r, c));
-    inp.addEventListener('input', () => {
-      const v = inp.value.replace(/[^a-z]/gi, '').slice(-1).toUpperCase(); inp.value = v;
+    // A new letter replaces the old one: no need to delete first.
+    inp.addEventListener('focus', () => inp.select());
+    inp.addEventListener('input', e => {
+      const typed = (e.inputType || '').startsWith('delete') ? '' : (e.data || inp.value);
+      const v = typed.replace(/[^a-z]/gi, '').slice(-1).toUpperCase(); inp.value = v;
       cell.classList.remove('bad', 'good');
       if (v) xwStep(1);
       xwMarkDone();
