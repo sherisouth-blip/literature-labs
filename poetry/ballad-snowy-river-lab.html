@@ -734,7 +734,12 @@
       <p class="eyebrow">Listen first</p>
       <h3>Hear it read aloud</h3>
       <p>Ballads were made to be heard. Listen once with your eyes closed and feel the gallop. Then listen again and follow the text below.</p>
-      <div class="video-wrap"><iframe src="https://www.youtube-nocookie.com/embed/2mpxPrNvoGU?start=186" title="A reading of The Man from Snowy River" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+      <div class="video-wrap"><iframe id="poemVideo" src="https://www.youtube-nocookie.com/embed/2mpxPrNvoGU?start=186&enablejsapi=1" title="A reading of The Man from Snowy River" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
+        <button type="button" class="btn" onclick="poemVideo('start')">▶ Start the poem</button>
+        <button type="button" class="btn" style="background:var(--lapis); box-shadow:0 2px 0 #1d3f63;" onclick="poemVideo('stop')">■ Stop</button>
+        <button type="button" class="btn" style="background:var(--lapis); box-shadow:0 2px 0 #1d3f63;" onclick="poemVideo('restart')">↺ Restart</button>
+      </div>
       <p style="font-size:0.9em; color:var(--muted); margin:10px 0 0;">Video not playing? <a href="https://youtu.be/2mpxPrNvoGU?t=186" target="_blank" rel="noopener">Watch it on YouTube</a> (opens in a new tab).</p>
     </div>
 
@@ -1785,6 +1790,15 @@ function checkWordBank() {
     '<p style="margin:12px 0 0;"><strong>' + found + ' of your ' + words.length + '</strong> ideas are in the poem. Notice how much of this poem is <em>action</em>: racing, chasing, falling, flying. A ballad is a story, so it is full of things happening.</p></div>';
 }
 
+/* ---------- Poem video buttons: the poem begins at 3:06 ---------- */
+const POEM_START = 186;
+function poemVideo(what) {
+  const f = document.getElementById('poemVideo');
+  const send = (func, args) => f.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args: args || [] }), '*');
+  if (what === 'stop') { send('pauseVideo'); return; }
+  // Start and Restart both go to the first line of the poem and play.
+  send('seekTo', [POEM_START, true]); send('playVideo');
+}
 buildCrossword();
 xwRestore();
 buildBallad();
